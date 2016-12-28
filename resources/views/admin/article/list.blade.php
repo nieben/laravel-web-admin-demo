@@ -1,9 +1,5 @@
 @extends('admin.layouts.app')
 
-@section('js')
-    <script language="javascript" type="text/javascript" src="{{asset('/js/My97DatePicker/WdatePicker.js')}}"></script>
-@endsection
-
 @section('content')
 
     <section id="main-content">
@@ -11,8 +7,8 @@
             <!-- page start-->
             <div class="row">
                 <div class="panel-body">
-                    <form class="form-inline" id="search_orders_form" action="{{url('/admin/orders')}}">
-                        <div class="form-group" style="width: 8%">
+                    <form method="get" class="form-inline" id="search_articles_form" action="{{url('/admin/article/list')}}">
+                        <div class="form-group" style="width: 10%">
                             <label for="">分类</label>
                             <select class="form-control" id="category_id" name="category_id">
                                 <option value="">全部</option>
@@ -24,17 +20,20 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="form-group" style="width: 8%">
+                        &nbsp;&nbsp;
+                        <div class="form-group" style="width: 20%">
                             <label for="">标题</label>
                             <input class="form-control" name="title"
                                    @if(isset($searchParams['title']))
                                    value="{{$searchParams['title']}}"
                                    @endif type="text"/>
                         </div>
+                        &nbsp;&nbsp;
                         <div class="form-group">
                             <label for=""></label>
                             <button class="btn btn-danger form-control" type="submit" id="search_articles">搜索</button>
                         </div>
+                        &nbsp;&nbsp;
                         <div class="form-group">
                             <label for=""></label>
                             <a href="{{url('/admin/article/list')}}"><button class="btn btn-danger form-control" type="button">清空条件</button></a>
@@ -45,7 +44,8 @@
                     <section class="panel">
                         <header class="panel-heading">
                             文章列表
-                            <a href="{{url('/admin/product/new')}}"><button class='btn btn-success btn-sm' style='float: right;margin-right: 10px'>写文章</button></a>
+                            &nbsp;&nbsp;<a href="{{url('/admin/article/add')}}"><button class='btn btn-info btn-sm'>写文章</button></a>
+                            &nbsp;&nbsp;<a href="{{url('/admin/banner/list')}}"><button class='btn btn-info btn-sm'>banner管理</button></a>
                         </header>
                         <table class="table table-striped table-advance table-hover">
                             <thead>
@@ -70,7 +70,13 @@
                                     <td>{{$row->labels_zh}}</td>
                                     <td>{{$row->click_number}}</td>
                                     <td>{{$row->comment_number}}</td>
-                                    <td>已发布{{$row->release_time}}</td>
+                                    <td>
+                                        @if($row->status == 0)
+                                            草稿<br>{{$row->updated_at}}
+                                        @elseif($row->status == 1)
+                                            已发布<br>{{$row->release_time}}
+                                        @endif
+                                    </td>
                                     <td>
                                         <a title="详情" href="{{url('admin/article/edit/'.$row->id)}}"><button class="btn btn-primary btn-xs"><i class="icon-pencil"></i></button></a>
                                     </td>

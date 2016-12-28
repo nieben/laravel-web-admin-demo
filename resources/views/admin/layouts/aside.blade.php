@@ -28,7 +28,7 @@
                 </ul>
             </li>
             <li class="sub-menu
-            @if ($active == 'finance')
+            @if ($active == 'label')
                     active
             @endif
             ">

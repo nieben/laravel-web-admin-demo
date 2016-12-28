@@ -15,6 +15,11 @@ class UserTableSeeder extends Seeder
         DB::table('ft2_users')->insert([[
             'mobile' => '18811742071',
             'password' => bcrypt('123'),
+            'nickname' => 'ben'
+        ],[
+            'mobile' => '13998202612',
+            'password' => bcrypt('123'),
+            'nickname' => 'xu'
         ]]);
     }
 }

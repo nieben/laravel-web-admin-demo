@@ -13,7 +13,7 @@ if ( ! function_exists('indexDbSourcesWithPrimarykey'))
         $sourcesGenerated = [];
 
         foreach ($sources as $key => $row) {
-            $sourcesGenerated[$row['id']] = $row;
+            $sourcesGenerated[$row->id] = $row;
         }
 
         return $sourcesGenerated;
@@ -29,7 +29,7 @@ if ( ! function_exists('arrayValuesWithIndex'))
         foreach ($indexes as $key => $index) {
             if (isset($array[$index])) {
                 if ($field !== null) {
-                    $values[] = $array[$index[$field]];
+                    $values[] = $array[$index]->$field;
                 } else {
                     $values[] = $array[$index];
                 }
