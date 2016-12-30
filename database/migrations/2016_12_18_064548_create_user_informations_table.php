@@ -22,8 +22,8 @@ class CreateUserInformationsTable extends Migration
             $table->json('tumour_function_index')->nullable()->comment('肿瘤指标 json');
             $table->json('liver_function_index')->nullable()->comment('肝功能指标 json');
             $table->json('renal_function_index')->nullable()->comment('肾功能指标 json');
-            $table->json('heart_index')->nullable()->comment('心脏指标 json');
-            $table->json('immunity_index')->nullable()->comment('免疫指标 json');
+            $table->json('heart_function_index')->nullable()->comment('心脏功能指标 json');
+            $table->json('immunity_function_index')->nullable()->comment('免疫功能指标 json');
             $table->json('routine_blood_index')->nullable()->comment('血常规指标 json');
             $table->timestamps();
         });

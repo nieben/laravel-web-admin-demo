@@ -63,6 +63,16 @@ Route::group(['middleware' => 'auth.admin:admin', 'namespace' => 'Admin', 'prefi
         Route::get('/list', 'UserController@index');
         Route::get('/edit/{id}', 'UserController@edit');
         Route::post('/remark', 'UserController@updateRemark');
+        Route::post('/index_data', 'UserController@getIndexData');
+        Route::get('/disable/{id}', 'UserController@disableUser');
+    });
+
+    //论坛
+    Route::group(['prefix' => 'post', 'namespace' => 'Forum'], function () {
+        Route::get('/list', 'PostController@index');
+        Route::get('/edit/{id}', 'PostController@edit');
+        Route::get('/disable/{id}', 'PostController@disable');
+        Route::get('/disable_comment/{type}/{id}', 'PostController@disableComment');
     });
 });
 

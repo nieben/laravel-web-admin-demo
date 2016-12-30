@@ -27,6 +27,7 @@ class CreateUsersTable extends Migration
             $table->char('sex', 1)->nullable()->comment('性别 F/M');
             $table->date('birthday')->nullable()->comment('生日');
             $table->tinyInteger('smoke_history')->nullable()->comment('吸烟史, 0:无 1:有');
+            $table->string('real_name')->nullable()->comment('真实姓名');
             $table->string('hospital')->nullable()->comment('所在医院');
             $table->string('department')->nullable()->comment('所属科室');
             $table->date('diagnosis_time')->nullable()->comment('确诊时间');

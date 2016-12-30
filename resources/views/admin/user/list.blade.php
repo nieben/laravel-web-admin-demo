@@ -70,7 +70,12 @@
                                 <tr>
                                     <td>{{$row->id}}</td>
                                     <td>{{$row->mobile}}</td>
-                                    <td>{{$row->nickname}}</td>
+                                    <td>
+                                        {{$row->nickname}}
+                                        @if ($row->disabled == 1)
+                                            <span style="color: #ec6459">(已拉黑)</span>
+                                        @endif
+                                    </td>
                                     <td>{{$userRoles[$row->role]}}</td>
                                     <td>
                                         <form method="post" class="form-inline" action="{{url('/admin/user/remark')}}">
