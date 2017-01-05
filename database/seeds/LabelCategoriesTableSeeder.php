@@ -17,6 +17,8 @@ class LabelCategoriesTableSeeder extends Seeder
         ],[
             'name' => '基因检测'
         ],[
+            'name' => '治疗方法'
+        ],[
             'name' => '化疗'
         ],[
             'name' => '靶向'

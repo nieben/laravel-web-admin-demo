@@ -26,8 +26,9 @@ class CreateArticlesTable extends Migration
             $table->tinyInteger('allow_comment')->comment('是否允许评论 0否 1是');
             $table->integer('click_number')->default(0)->comment('点击量');
             $table->integer('cheer_number')->default(0)->comment('加油数量');
+            $table->text('cheered_users')->nullable()->comment('加油过的用户id 格式：,1,3,5,9,');
             $table->integer('comment_number')->default(0)->comment('评论数量');
-            $table->integer('last_response')->nullable()->comment('最后回复时间');
+            $table->dateTime('last_response')->nullable()->comment('最后回复时间');
             $table->integer('sort')->default(2147483647)->comment('排序 0排第一位');
             $table->tinyInteger('status')->default(0)->comment('状态 0：草稿 1：发布');
             $table->tinyInteger('disabled')->default(0)->comment('软删除 0否 1是');

@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 
 class LoginController extends Controller
 {
@@ -51,9 +54,8 @@ class LoginController extends Controller
 
     /**
      * Handle a login request to the application.
-     *
+     * 手机号密码登陆
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function login(Request $request)
     {
@@ -77,7 +79,85 @@ class LoginController extends Controller
         // user surpasses their maximum number of attempts they will get locked out.
         $this->incrementLoginAttempts($request);
 
-        return $this->sendFailedLoginResponse($request);
+        $message = '登录失败！';
+
+        return $this->sendFailedLoginResponse($message);
+    }
+
+    /**
+     * 手机号验证码快捷登陆
+     * @param Request $request
+     */
+    public function quickLogin(Request $request)
+    {
+        $this->validateQuickLogin($request);
+
+        // If the class is using the ThrottlesLogins trait, we can automatically throttle
+        // the login attempts for this application. We'll key this by the username and
+        // the IP address of the client making these requests into this application.
+        if ($this->hasTooManyLoginAttempts($request)) {
+            $this->fireLockoutEvent($request);
+
+            return $this->sendLockoutResponse($request);
+        }
+
+        //先验证验证码是否正确
+        if ($this->checkVerificationCode($request->input('mobile'), $request->input('verification_code'))) {
+            //检查是否为系统用户
+            if ($this->attemptQuickLogin($request)) {
+                return $this->sendLoginResponse($request);
+            } else {
+                //如果是活动用户，在本系统创建用户，并引导填写补充信息
+                if ($this->isActivityUser($request->input('mobile'))) {
+                    $user = $this->create($request->input('mobile'));
+                    $this->guard()->login($user);
+
+                    return response()->success([
+                        'redirect' => '/user/supplementary_information'
+                    ]);
+                } else {
+                    $message = '该手机号未注册！';
+                    return $this->sendFailedLoginResponse($message);
+                }
+            }
+        }
+
+        // If the login attempt was unsuccessful we will increment the number of attempts
+        // to login and redirect the user back to the login form. Of course, when this
+        // user surpasses their maximum number of attempts they will get locked out.
+        $this->incrementLoginAttempts($request);
+
+        $message = '验证码错误！';
+        return $this->sendFailedLoginResponse($message);
+    }
+
+    protected function isUser($mobile)
+    {
+        $user = User::where('mobile', $mobile)->first();
+
+        return empty($user) ? false : true;
+    }
+
+    protected function isActivityUser($mobile)
+    {
+        //肺腾活动系统user表，线上环境部署在同一个数据库
+        $user = DB::table('users')->where('mobile', $mobile)->first();
+
+        return empty($user) ? false : true;
+    }
+
+    protected function checkVerificationCode($mobile, $verificationCode) {
+//        return TRUE;
+        $rVerificationCode = Redis::get('ft2_verification_code:'.$mobile);
+
+        return ($verificationCode == $rVerificationCode);
+    }
+
+    protected function create($mobile)
+    {
+        return User::create([
+            'mobile' => $mobile,
+        ]);
     }
 
     /**
@@ -88,14 +168,16 @@ class LoginController extends Controller
      */
     protected function validateLogin(Request $request)
     {
-        $messages = [
-            'mobile.required' => '请填写手机号！',
-            'password.required'  => '请填写密码！',
-        ];
-
         $this->validate($request, [
             $this->username() => 'required', 'password' => 'required',
-        ], $messages);
+        ]);
+    }
+
+    protected function validateQuickLogin(Request $request)
+    {
+        $this->validate($request, [
+            $this->username() => 'required', 'verification_code' => 'required',
+        ]);
     }
 
     /**
@@ -106,8 +188,22 @@ class LoginController extends Controller
      */
     protected function attemptLogin(Request $request)
     {
+        $credentials = $this->credentials($request);
+        $credentials['disabled'] = 0;  //用户不能为禁用状态
+
+        //标记remember_token
         return $this->guard()->attempt(
-            $this->credentials($request), $request->has('remember')
+            $credentials, TRUE
+        );
+    }
+
+    protected function attemptQuickLogin(Request $request)
+    {
+        $credentials = $request->only($this->username());
+        $credentials['disabled'] = 0;  //用户不能为禁用状态
+
+        return $this->guard()->attempt(
+            $credentials, TRUE    //标记remember_token
         );
     }
 
@@ -134,8 +230,7 @@ class LoginController extends Controller
 
         $this->clearLoginAttempts($request);
 
-        return $this->authenticated($request, $this->guard()->user())
-            ?: redirect()->intended($this->redirectPath());
+        return $this->authenticated($request, $this->guard()->user());
     }
 
     /**
@@ -147,22 +242,28 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
-        //
+        //如果未填写基本信息，引导填写基本信息
+        if ($user->information_filled == 0) {
+            return response()->success([
+                'redirect' => '/user/basic_information'
+            ]);
+        } else {
+            return response()->success([
+                'redirect' => '/home'
+            ]);
+        }
     }
 
     /**
      * Get the failed login response instance.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  String $message
      * @return \Illuminate\Http\RedirectResponse
      */
-    protected function sendFailedLoginResponse(Request $request)
+    protected function sendFailedLoginResponse($message)
     {
-        return redirect()->back()
-            ->withInput($request->only($this->username(), 'remember'))
-            ->withErrors([
-                $this->username() => '账号或密码错误！',
-            ]);
+        return response()->fail($message);
     }
 
     /**

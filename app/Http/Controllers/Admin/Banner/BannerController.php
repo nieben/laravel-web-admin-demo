@@ -79,7 +79,7 @@ class BannerController extends Controller
     {
         $banner = Banner::find($id);
         if (empty($banner)) {
-            redirect('/admin/banner/list');
+            return redirect('/admin/banner/list');
         }
         $data['banner'] = $banner;
 

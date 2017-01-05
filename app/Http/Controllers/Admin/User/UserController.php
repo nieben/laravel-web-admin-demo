@@ -85,7 +85,7 @@ class UserController extends Controller
         $user = User::find($id);
 
         if (empty($user)) {
-            redirect('/admin/user/list');
+            return redirect('/admin/user/list');
         }
 
         $data['user'] = $this->generateUser($user);

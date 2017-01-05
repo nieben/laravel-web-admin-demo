@@ -27,7 +27,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/user/basic_information';
 
     /**
      * Create a new controller instance.
@@ -40,6 +40,46 @@ class RegisterController extends Controller
     }
 
     /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showRegistrationForm()
+    {
+        return view('auth.register');
+    }
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        if ($this->checkVerificationCode($request->input('mobile'), $request->input('verification_code'))) {
+            $user = $this->create($request->all());
+
+            $this->guard()->login($user);
+
+            return response()->success([
+                'redirect' => '/user/basic_information'
+            ]);
+        } else {
+            return response()->fail('验证码错误！');
+        }
+    }
+
+    protected function checkVerificationCode($mobile, $verificationCode) {
+//        return TRUE;
+        $rVerificationCode = Redis::get('ft2_verification_code:'.$mobile);
+
+        return ($verificationCode == $rVerificationCode);
+    }
+
+    /**
      * Get a validator for an incoming registration request.
      *
      * @param  array  $data
@@ -48,9 +88,10 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|min:6|confirmed',
+            'nickname' => 'required|max:255',
+            'mobile' => 'required|unique:ft2_users',
+            'verification_code' => 'required',
+            'password' => 'required',
         ]);
     }
 
@@ -63,8 +104,8 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
+            'nickname' => $data['nickname'],
+            'mobile' => $data['mobile'],
             'password' => bcrypt($data['password']),
         ]);
     }

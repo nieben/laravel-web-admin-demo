@@ -83,6 +83,11 @@ class ArticleController extends Controller
             $article->status = $request->input('status');
             $article->allow_comment = $request->input('allow_comment');
             $article->display_comment = 1;
+
+            if ($request->input('status') == 1) {  //发布状态
+                $article->release_time = Date('Y-m-d H:i:s');
+            }
+
             $article->save();
 
             return array(
@@ -109,7 +114,7 @@ class ArticleController extends Controller
 
         $article = Article::where('id', $id)->first();
         if (empty($article)) {
-            redirect('/admin/article/list');
+            return redirect('/admin/article/list');
         }
         $labelNames = arrayValuesWithIndex($data['labels'], explode(',', $article->labels) ,'name');
         $article->labels_zh = implode(',', $labelNames);
@@ -161,6 +166,11 @@ class ArticleController extends Controller
             $article->status = $request->input('status');
             $article->allow_comment = $request->input('allow_comment');
             $article->display_comment = 1;
+
+            if ($request->input('status') == 1) {  //发布状态
+                $article->release_time = Date('Y-m-d H:i:s');
+            }
+
             $article->save();
 
             return array(

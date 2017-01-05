@@ -30,7 +30,7 @@ class LabelController extends Controller
         $labels = $db->join('ft2_label_categories', 'ft2_label_categories.id', '=', 'ft2_labels.label_category_id')
             ->orderBy('ft2_labels.created_at', 'desc')
             ->select('ft2_labels.*', 'ft2_label_categories.name as category_name')
-            ->paginate(10);
+            ->paginate(3);
         $data['labels'] = $labels;
 
         $data['label_categories'] = DB::table('ft2_label_categories')->get();

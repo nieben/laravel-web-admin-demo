@@ -37,6 +37,7 @@ class CreateUsersTable extends Migration
             $table->string('genic_mutation')->nullable()->comment('基因突变');
             $table->string('test_method')->nullable()->comment('检测方法 0:组织标本（活检）1:血液标本 2:胸水蜡块');
             $table->tinyInteger('disabled')->default(0)->comment('是否禁用 0否 1是');
+            $table->rememberToken();
             $table->timestamps();
         });
     }
