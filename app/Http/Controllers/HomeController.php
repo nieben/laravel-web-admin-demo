@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Article;
 use App\Banner;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -144,16 +145,11 @@ class HomeController extends Controller
 
     public function test(Request $request)
     {
-        try {
-            $this->validate($request, [
-                'id' => 'required|exists:ft2_articles,id,status,1,disabled,0',
-            ]);
+        $user = User::find(1);
 
-            return response()->success([
-                'data' => '/user/pathological_information'
-            ]);
-        } catch (\Exception $e) {
-            return response()->fail($e->getMessage());
-        }
+        return response()->success([
+            'test' => json_decode($user->metastatic_lesion, true),
+            'test2' => $user->metastatic_lesion
+        ]);
     }
 }

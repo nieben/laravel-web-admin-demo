@@ -7,6 +7,7 @@ use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 
@@ -157,7 +158,15 @@ class LoginController extends Controller
     {
         return User::create([
             'mobile' => $mobile,
+            'avatar' => $this->getRandomAvatar()
         ]);
+    }
+
+    protected function getRandomAvatar()
+    {
+        $avatars = json_decode(Config::get('constants.DEFAULT_AVATARS'), true);
+
+        return $avatars[mt_rand(0, count($avatars) - 1)];
     }
 
     /**

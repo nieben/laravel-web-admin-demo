@@ -50,6 +50,17 @@ Route::group(['prefix' => 'forum'], function () {
     Route::get('/init', 'ForumController@getIndexData');
     //帖子搜索
     Route::get('/post', 'ForumController@searchPosts');
+    //帖子详情路由
+    Route::get('/post/detail/{id}', 'ForumController@postDetail');
+    //帖子详情数据初始化接口
+    Route::get('/post/detail/init/{id}', 'ForumController@getPostDetailData');
+
+    Route::group(['middleware' => 'auth'], function () {
+        //加油接口
+        Route::get('/post/cheer/{id}', 'ForumController@cheerPost');
+        //评论接口
+        Route::post('/post/comment', 'ForumController@addPostComment');
+    });
 });
 
 Route::group(['middleware' => 'auth'], function () {

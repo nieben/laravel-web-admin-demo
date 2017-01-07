@@ -23,8 +23,10 @@ class CreatePostsTable extends Migration
             $table->string('title')->comment('标题');
             $table->string('labels')->nullable()->comment('1,2,3主键 逗号分隔');
             $table->text('content')->comment('正文 html内容');
+            $table->json('images')->nullable()->comment('图片 json');
             $table->integer('click_number')->default(0)->comment('点击数量');
             $table->integer('cheer_number')->default(0)->comment('加油数量');
+            $table->text('cheered_users')->nullable()->comment('加油过的用户id 格式：,1,3,5,9,');
             $table->integer('comment_number')->default(0)->comment('评论数量');
             $table->dateTime('last_response')->nullable()->comment('最后回复时间');
             $table->tinyInteger('disabled')->default(0)->comment('软删除 0否 1是');

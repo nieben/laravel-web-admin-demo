@@ -15,9 +15,9 @@ class LabelCategoriesTableSeeder extends Seeder
         DB::table('ft2_label_categories')->insert([[
             'name' => '检测手段'
         ],[
-            'name' => '基因检测'
-        ],[
             'name' => '治疗方法'
+        ],[
+            'name' => '基因检测'
         ],[
             'name' => '化疗'
         ],[

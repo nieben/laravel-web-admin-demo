@@ -155,9 +155,7 @@ class ArticleController extends Controller
             $article->cheered_users = $cheeredUsers;
             $article->save();
 
-            return response()->success([
-                'redirect' => '/user/pathological_information'
-            ]);
+            return response()->success([]);
         } catch (\Exception $e) {
             return response()->fail($e->getMessage());
         }

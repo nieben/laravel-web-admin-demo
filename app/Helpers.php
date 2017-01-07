@@ -39,3 +39,38 @@ if ( ! function_exists('arrayValuesWithIndex'))
         return $values;
     }
 }
+
+if ( ! function_exists('getYearIntervalFromNow'))
+{
+    //两个时间距隔多少年多少个月多少天 例如：2年三个月10天
+    function getDifferDate($time1, $time2)
+    {
+        if ($time1 > $time2){
+            $tmp = $time2;
+            $time2 = $time1;
+            $time1 = $tmp;
+        }
+
+        $date1 = date('Y-m-d', $time1);
+        $date2 = date('Y-m-d', $time2);
+
+        list($Y1,$m1,$d1)=explode('-',$date1);
+        list($Y2,$m2,$d2)=explode('-',$date2);
+
+        $Y=$Y2-$Y1;
+        $m=$m2-$m1;
+        $d=$d2-$d1;
+
+        if ($d<0){
+            $d+=(int)date('t',strtotime("-1 month $date2"));
+            $m--;
+        }
+
+        if ($m<0){
+            $m+=12;
+            $Y--;
+        }
+
+        return array('year'=>$Y,'month'=>$m,'day'=>$d);
+    }
+}

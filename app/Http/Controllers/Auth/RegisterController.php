@@ -107,6 +107,14 @@ class RegisterController extends Controller
             'nickname' => $data['nickname'],
             'mobile' => $data['mobile'],
             'password' => bcrypt($data['password']),
+            'avatar' => $this->getRandomAvatar()
         ]);
+    }
+
+    protected function getRandomAvatar()
+    {
+        $avatars = json_decode(Config::get('constants.DEFAULT_AVATARS'), true);
+
+        return $avatars[mt_rand(0, count($avatars) - 1)];
     }
 }

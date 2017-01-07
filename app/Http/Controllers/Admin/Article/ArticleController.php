@@ -219,6 +219,11 @@ class ArticleController extends Controller
 
                 $articleComment->disabled = 1;
                 $articleComment->save();
+
+                //评论数量减1
+                $article = Article::find($articleComment->article_id);
+                $article->comment_number -= 1;
+                $article->save();
             } elseif ($type == 'response') {
                 $articleCommentResponse = ArticleCommentResponse::find($id);
 
@@ -228,6 +233,16 @@ class ArticleController extends Controller
 
                 $articleCommentResponse->disabled = 1;
                 $articleCommentResponse->save();
+
+                //评论数量减1
+                $article = Article::find($articleCommentResponse->article_id);
+                $article->comment_number -= 1;
+                $article->save();
+
+                //评论回复数减1
+                $articleComment = ArticleComment::find($articleCommentResponse->article_comment_id);
+                $articleComment->response_number -= 1;
+                $articleComment->save();
             } else {
                 throw new \Exception('参数错误！');
             }

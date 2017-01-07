@@ -190,6 +190,11 @@ class PostController extends Controller
 
                 $postComment->disabled = 1;
                 $postComment->save();
+
+                //评论数量减1
+                $post = Post::find($postComment->post_id);
+                $post->comment_number -= 1;
+                $post->save();
             } elseif ($type == 'response') {
                 $postCommentResponse = PostCommentResponse::find($id);
 
@@ -199,6 +204,16 @@ class PostController extends Controller
 
                 $postCommentResponse->disabled = 1;
                 $postCommentResponse->save();
+
+                //评论数量减1
+                $post = Post::find($postCommentResponse->post_id);
+                $post->comment_number -= 1;
+                $post->save();
+
+                //评论回复数减1
+                $postComment = PostComment::find($postCommentResponse->post_comment_id);
+                $postComment->response_number -= 1;
+                $postComment->save();
             } else {
                 throw new \Exception('参数错误！');
             }
