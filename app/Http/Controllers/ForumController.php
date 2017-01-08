@@ -475,4 +475,57 @@ class ForumController extends Controller
             'content' => 'required',
         ]);
     }
+
+    public function addPost(Request $request)
+    {
+        try {
+            //验证参数
+            $this->validateAddPost($request);
+
+            $forum_sub_section_id = $request->forum_sub_section_id;
+            $title = $request->title;
+            $labels = $request->labels;
+            $content = $request->input('content');
+            $images = $request->images;
+
+            $subSection = DB::table('ft2_forum_sub_sections')
+                ->where('id', $forum_sub_section_id)
+                ->first();
+
+            $user = Auth::user();
+
+            $post = new Post();
+            $post->forum_section_id = $subSection->forum_section_id;
+            $post->forum_sub_section_id = $forum_sub_section_id;
+            $post->user_id = $user->id;
+            $post->title = $title;
+
+            if (! empty($labels)) {
+                $post->labels = implode(',', $labels);
+            }
+
+            $post->content = $content;
+
+            if (! empty($images)) {
+                $post->images = json_encode($images);
+            }
+
+            $post->save();
+
+            return response()->success([]);
+        } catch (\Exception $e) {
+            return response()->fail($e->getMessage());
+        }
+    }
+
+    protected function validateAddPost($request)
+    {
+        $this->validate($request, [
+            'forum_sub_section_id' => 'required|exists:ft2_forum_sub_sections,id',
+            'title' => 'required|max:255',
+            'labels' => 'array',
+            'content' => 'required',
+            'images' => 'array',
+        ]);
+    }
 }

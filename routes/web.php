@@ -60,8 +60,17 @@ Route::group(['prefix' => 'forum'], function () {
         Route::get('/post/cheer/{id}', 'ForumController@cheerPost');
         //评论接口
         Route::post('/post/comment', 'ForumController@addPostComment');
+        //帖子创建
+
     });
+    Route::post('/post/create', 'ForumController@addPost');
 });
+
+//所有启用状态标签
+Route::get('/labels', 'LabelController@getActiveLabels');
+
+//上传图片接口
+Route::post('/upload_image', 'FileController@uploadImage');
 
 Route::group(['middleware' => 'auth'], function () {
     //短信验证码
@@ -103,6 +112,10 @@ Route::group(['middleware' => 'auth'], function () {
         //免疫功能指标首次填写
         Route::get('/immunity_function_index/first_add', 'UserController@firstAddImmunityIndexInformation');
         Route::post('/immunity_function_index/first_add', 'UserController@firstAddImmunityIndexInformationSubmit');
+
+        //个人主页
+        Route::get('/home', 'UserController@homePage');
+        Route::get('/home/init', 'UserController@getHomePageData');
     });
 });
 

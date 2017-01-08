@@ -309,4 +309,16 @@ class UserController extends Controller
             ]);
         }
     }
+
+    public function homePage()
+    {
+        View::addExtension('html', 'php');
+
+        return view('test');
+    }
+
+    public function getHomePageData()
+    {
+
+    }
 }
