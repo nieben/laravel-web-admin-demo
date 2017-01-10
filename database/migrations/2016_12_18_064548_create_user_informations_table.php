@@ -18,8 +18,8 @@ class CreateUserInformationsTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->integer('user_id');
-            $table->json('index_information')->nullable()->comment('指标信息 json key=>value key大写');
-            $table->json('tumour_function_index')->nullable()->comment('肿瘤指标 json 格式为 [CEA => [2016-02-01 => 值, 2016-03-01 => 值], 肿瘤大小 => [2016-02-01 => 值, 2016-03-01 => 值]]');
+            $table->json('index_information')->nullable()->comment('指标信息 json key value key大写');
+            $table->json('tumour_function_index')->nullable()->comment('肿瘤指标 json');
             $table->json('liver_function_index')->nullable()->comment('肝功能指标 json');
             $table->json('renal_function_index')->nullable()->comment('肾功能指标 json');
             $table->json('heart_function_index')->nullable()->comment('心脏功能指标 json');
