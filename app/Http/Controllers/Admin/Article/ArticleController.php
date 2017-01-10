@@ -145,7 +145,9 @@ class ArticleController extends Controller
             $createdAt[$key] = $row->created_at;
         }
 
-        array_multisort($createdAt, SORT_DESC, $responses);
+        if (! empty($createdAt)) {
+            array_multisort($createdAt, SORT_DESC, $responses);
+        }
 
         $data['responses'] = $responses;
 
