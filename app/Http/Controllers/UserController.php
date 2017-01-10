@@ -31,17 +31,21 @@ class UserController extends Controller
                 $user->smoke_history = $request->input('smoke_history');
                 $user->diagnosis_time = $request->input('diagnosis_time');
                 $user->save();
+
+                return response()->success([
+                    'redirect' => '/user/pathological_information'
+                ]);
             } elseif ($request->input('role') == 1) {
                 $user->real_name = $request->input('real_name');
                 $user->sex = $request->input('sex');
                 $user->hospital = $request->input('hospital');
                 $user->department = $request->input('department');
                 $user->save();
-            }
 
-            return response()->success([
-                'redirect' => '/user/pathological_information'
-            ]);
+                return response()->success([
+                    'redirect' => '/home'
+                ]);
+            }
         } catch (\Exception $e) {
             return response()->fail($e->getMessage());
         }
