@@ -157,17 +157,7 @@ class ForumController extends Controller
 
         //几年几个月，如果一个月内则返回多少天
         if ($row->diagnosis_time) {
-            $diffDate = getDifferDate(strtotime($row->diagnosis_time), time());
-
-            $diagnosis_time = '';
-            $diagnosis_time .= $diffDate['year'] > 0 ? $diffDate['year'].'年' : '';
-            $diagnosis_time .= $diffDate['month'] > 0 ? $diffDate['year'].'个月' : '';
-
-            if ($diagnosis_time) {
-                $labels[] = $diagnosis_time;
-            } else {
-                $labels[] = $diffDate['day'] > 0 ? $diffDate['year'].'天' : '';
-            }
+            $labels[] = getDiagnosisDuration(strtotime($row->diagnosis_time));
         }
 
         return $labels;

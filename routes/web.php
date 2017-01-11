@@ -88,10 +88,14 @@ Route::group(['middleware' => 'auth'], function () {
         //基本信息
         Route::get('/basic_information', 'UserController@basicInformation');
         Route::post('/basic_information', 'UserController@basicInformationSubmit');
+        Route::get('/basic_information/update', 'UserController@updateBasicInformation');
+        Route::post('/basic_information/update', 'UserController@updateBasicInformationSubmit');
 
         //病理信息
         Route::get('/pathological_information', 'UserController@pathologicalInformation');
         Route::post('/pathological_information', 'UserController@pathologicalInformationSubmit');
+        Route::get('/pathological_information/update', 'UserController@updatePathologicalInformation');
+        Route::post('/pathological_information/update', 'UserController@updatePathologicalInformationSubmit');
 
         //肿瘤功能指标首次填写
         Route::get('/tumor_function_index/first_add', 'UserController@firstAddTumorIndexInformation');

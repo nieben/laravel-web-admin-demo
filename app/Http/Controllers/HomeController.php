@@ -145,11 +145,6 @@ class HomeController extends Controller
 
     public function test(Request $request)
     {
-        $user = User::find(1);
-
-        return response()->success([
-            'test' => json_decode($user->metastatic_lesion, true),
-            'test2' => $user->metastatic_lesion
-        ]);
+        var_dump($request->all());
     }
 }

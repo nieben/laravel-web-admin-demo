@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\User;
 use App\UserInformation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 
 class UserController extends Controller
@@ -26,6 +28,7 @@ class UserController extends Controller
             $user = $request->user();
 
             if ($request->input('role') == 0) {
+                $user->role = 0;
                 $user->sex = $request->input('sex');
                 $user->birthday = $request->input('birthday');
                 $user->smoke_history = $request->input('smoke_history');
@@ -36,6 +39,7 @@ class UserController extends Controller
                     'redirect' => '/user/pathological_information'
                 ]);
             } elseif ($request->input('role') == 1) {
+                $user->role = 1;
                 $user->real_name = $request->input('real_name');
                 $user->sex = $request->input('sex');
                 $user->hospital = $request->input('hospital');
@@ -121,7 +125,7 @@ class UserController extends Controller
             $user = $request->user();
             $user->pathologic_type = $request->input('pathologic_type');
             $user->disease_stage = $request->input('disease_stage');
-            $user->metastatic_lesion = $request->input('metastatic_lesion');
+            $user->metastatic_lesion = json_encode($request->input('metastatic_lesion'));
             $user->genic_mutation = $request->input('genic_mutation');
             $user->test_method = $request->input('test_method');
             $user->save();
@@ -323,6 +327,153 @@ class UserController extends Controller
 
     public function getHomePageData()
     {
+        try {
+            $user = Auth::user();
 
+            $data = [];
+
+            if ($user->role == 0) {  //患者或家属
+                $data['user'] = [
+                    'avatar' => $user->avatar,
+                    'nickname' => $user->nickname,
+                    'sex' => $user->sex,
+                    'smoke_history' => $user->smoke_history,
+                    'diagnosis_time' => getDiagnosisDuration(strtotime($user->diagnosis_time))
+                ];
+
+                $data['pathological_info'] = [
+                    'pathologic_type' => $user->pathologic_type,
+                    'disease_stage' => $user->disease_stage,
+                    'metastatic_lesion' => json_decode($user->metastatic_lesion, true),
+                    'genic_mutation' => $user->genic_mutation,
+                    'test_method' => $user->test_method
+                ];
+
+                $data['index_data'] = $this->getUserFunctionIndexData($user->id, 'tumour_function_index');
+            } elseif ($user->role == 1) {  //医生
+                $data['user'] = [
+                    'avatar' => $user->avatar,
+                    'real_name' => $user->real_name,
+                    'sex' => $user->sex,
+                    'hospital' => $user->hospital,
+                    'department' => $user->department
+                ];
+            }
+
+            return response()->success($data);
+        } catch (\Exception $e) {
+            return response()->fail($e->getMessage());
+        }
+    }
+
+    protected function getUserFunctionIndexData($userId, $field)
+    {
+        $userInformation = UserInformation::where('user_id', $userId)->first();
+
+        $indexData = json_decode($userInformation->$field, true);
+        
+        //获取所有index信息
+        $indexes = indexDbSourcesWithColumn(DB::table('ft2_indexes')->get(), 'alias');
+
+        $indexDataGenerated = [];
+
+        foreach ($indexData as $key => $row) {
+            $indexDataGenerated[] = [
+                'name' => $indexes[$key]->name,
+                'alias' => $key,
+                'important' => $indexes[$key]->important,
+                'data' => $row
+            ];
+        }
+
+        return $indexDataGenerated;
+    }
+
+    public function updateBasicInformation()
+    {
+        View::addExtension('html', 'php');
+
+        return view('test');
+    }
+
+    public function updateBasicInformationSubmit(Request $request)
+    {
+        try {
+            //验证参数
+            $this->validateBasicInformationUpdate($request);
+
+            $user = $request->user();
+
+            if ($user->role == 0) {  //病人或家属
+                $user->sex = $request->input('sex');
+                $user->birthday = $request->input('birthday');
+                $user->smoke_history = $request->input('smoke_history');
+                $user->diagnosis_time = $request->input('diagnosis_time');
+                $user->save();
+
+                return response()->success([]);
+            } elseif ($user->role == 1) {
+                $user->real_name = $request->input('real_name');
+                $user->sex = $request->input('sex');
+                $user->hospital = $request->input('hospital');
+                $user->department = $request->input('department');
+                $user->save();
+
+                return response()->success([]);
+            }
+        } catch (\Exception $e) {
+            return response()->fail($e->getMessage());
+        }
+    }
+
+    protected function validateBasicInformationUpdate(Request $request)
+    {
+        $user = $request->user();
+
+        if ($user->role == 0) {   //患者或家属
+            $this->validate($request, [
+                'sex' => 'required|in:F,M',
+                'birthday' => 'required|date_format:YYYY-mm-dd',
+                'smoke_history' => 'required|in:0,1',
+                'diagnosis_time' => 'required|date_format:YYYY-mm-dd',
+            ]);
+        } elseif ($user->role == 1) {   //医生
+            $this->validate($request, [
+                'real_name' => 'required|max:255',
+                'sex' => 'required|in:F,M',
+                'hospital' => 'required',
+                'department' => 'required',
+            ]);
+        } else {
+            throw new \Exception(Config::get('constants.PARAM_ERROR_MESSAGE'));
+        }
+    }
+
+    public function updatePathologicalInformation()
+    {
+        View::addExtension('html', 'php');
+
+        return view('test');
+    }
+
+    public function updatePathologicalInformationSubmit(Request $request)
+    {
+        try {
+            //验证参数
+            $this->validatePathologicalInformation($request);
+
+            $user = $request->user();
+
+            $user->pathologic_type = $request->input('pathologic_type');
+            $user->disease_stage = $request->input('disease_stage');
+            $user->metastatic_lesion = json_encode($request->input('metastatic_lesion'));
+            $user->genic_mutation = $request->input('genic_mutation');
+            $user->test_method = $request->input('test_method');
+            $user->save();
+
+            return response()->success([]);
+        } catch (\Exception $e) {
+            return response()->fail($e->getMessage());
+        }
     }
 }
