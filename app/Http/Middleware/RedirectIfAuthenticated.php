@@ -23,11 +23,12 @@ class RedirectIfAuthenticated
             } else {
                 return redirect('/home');
             }
-        } else {
-            if ($request->expectsJson()) {
-                return response()->fail('请登陆后操作！');
-            }
         }
+//        else {
+//            if ($request->expectsJson()) {
+//                return response()->fail('请登陆后操作！');
+//            }
+//        }
 
         return $next($request);
     }
