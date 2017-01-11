@@ -100,22 +100,45 @@ Route::group(['middleware' => 'auth'], function () {
         //肿瘤功能指标首次填写
         Route::get('/tumor_function_index/first_add', 'UserController@firstAddTumorIndexInformation');
         Route::post('/tumor_function_index/first_add', 'UserController@firstAddTumorIndexInformationSubmit');
+        //新增肿瘤指标
+        Route::get('/tumor_function_index/add', 'UserController@addTumorIndexInformation');
+        Route::post('/tumor_function_index/add', 'UserController@addTumorIndexInformationSubmit');
 
         //肝功能指标首次填写
         Route::get('/liver_function_index/first_add', 'UserController@firstAddLiverIndexInformation');
         Route::post('/liver_function_index/first_add', 'UserController@firstAddLiverIndexInformationSubmit');
+        //新增肝功能指标
+        Route::get('/liver_function_index/add', 'UserController@addLiverIndexInformation');
+        Route::post('/liver_function_index/add', 'UserController@addLiverIndexInformationSubmit');
 
         //肾功能指标首次填写
         Route::get('/renal_function_index/first_add', 'UserController@firstAddRenalIndexInformation');
         Route::post('/renal_function_index/first_add', 'UserController@firstAddRenalIndexInformationSubmit');
+        //新增指标
+        Route::get('/renal_function_index/add', 'UserController@addRenalIndexInformation');
+        Route::post('/renal_function_index/add', 'UserController@addRenalIndexInformationSubmit');
 
         //心脏功能指标首次填写
         Route::get('/heart_function_index/first_add', 'UserController@firstAddHeartIndexInformation');
         Route::post('/heart_function_index/first_add', 'UserController@firstAddHeartIndexInformationSubmit');
+        //新增指标
+        Route::get('/heart_function_index/add', 'UserController@addHeartIndexInformation');
+        Route::post('/heart_function_index/add', 'UserController@addHeartIndexInformationSubmit');
 
         //免疫功能指标首次填写
         Route::get('/immunity_function_index/first_add', 'UserController@firstAddImmunityIndexInformation');
         Route::post('/immunity_function_index/first_add', 'UserController@firstAddImmunityIndexInformationSubmit');
+        //新增指标
+        Route::get('/immunity_function_index/add', 'UserController@addImmunityIndexInformation');
+        Route::post('/immunity_function_index/add', 'UserController@addImmunityIndexInformationSubmit');
+
+        //新增血常规指标
+        Route::get('/routine_blood_index/add', 'UserController@addRoutineBloodIndexInformation');
+        Route::post('/routine_blood_index/add', 'UserController@addRoutineBloodIndexInformationSubmit');
+
+        //指标信息修改
+        Route::get('/index_information/update', 'UserController@updateIndexData');
+        Route::post('/index_information/update', 'UserController@updateIndexDataSubmit');
 
         //个人主页
         Route::get('/home', 'UserController@homePage');

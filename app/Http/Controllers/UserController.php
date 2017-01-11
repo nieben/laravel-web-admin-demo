@@ -289,19 +289,19 @@ class UserController extends Controller
     {
         $userInformation = $this->getUserInformation($userId);
 
-        $fieldData = $userInformation->$field ? json_decode($userInformation, true) : [];
+        $fieldData = $userInformation->$field ? json_decode($userInformation->$field, true) : [];
 
         foreach ($data as $key => $row) {
             //都存为大写形式
             $index = strtoupper($row['index']);
 
-            $fieldData[$index][] = [$row['date'] => $row['value']];
+            $fieldData[$index][$row['date']] = $row['value'];
         }
 
         //重新对index进行升序排序
         ksort($fieldData);
 
-        $userInformation->$field = $fieldData;
+        $userInformation->$field = json_encode($fieldData);
         $userInformation->save();
     }
 
@@ -475,5 +475,209 @@ class UserController extends Controller
         } catch (\Exception $e) {
             return response()->fail($e->getMessage());
         }
+    }
+
+    public function addTumorIndexInformation()
+    {
+        View::addExtension('html', 'php');
+
+        return view('test');
+    }
+
+    public function addTumorIndexInformationSubmit(Request $request)
+    {
+        try {
+            //验证参数
+            $this->validateFirstAddIndexInformation($request);
+
+            $user = $request->user();
+
+            $this->addIndexInformation('tumour_function_index', $request->input('data'), $user->id);
+
+            return response()->success([]);
+        } catch (\Exception $e) {
+            return response()->fail($e->getMessage());
+        }
+    }
+
+    public function addLiverIndexInformation()
+    {
+        View::addExtension('html', 'php');
+
+        return view('test');
+    }
+
+    public function addLiverIndexInformationSubmit(Request $request)
+    {
+        try {
+            //验证参数
+            $this->validateFirstAddIndexInformation($request);
+
+            $user = $request->user();
+
+            $this->addIndexInformation('liver_function_index', $request->input('data'), $user->id);
+
+            return response()->success([]);
+        } catch (\Exception $e) {
+            return response()->fail($e->getMessage());
+        }
+    }
+
+    public function addRenalIndexInformation()
+    {
+        View::addExtension('html', 'php');
+
+        return view('test');
+    }
+
+    public function addRenalIndexInformationSubmit(Request $request)
+    {
+        try {
+            //验证参数
+            $this->validateFirstAddIndexInformation($request);
+
+            $user = $request->user();
+
+            $this->addIndexInformation('renal_function_index', $request->input('data'), $user->id);
+
+            return response()->success([]);
+        } catch (\Exception $e) {
+            return response()->fail($e->getMessage());
+        }
+    }
+
+    public function addHeartIndexInformation()
+    {
+        View::addExtension('html', 'php');
+
+        return view('test');
+    }
+
+    public function addHeartIndexInformationSubmit(Request $request)
+    {
+        try {
+            //验证参数
+            $this->validateFirstAddIndexInformation($request);
+
+            $user = $request->user();
+
+            $this->addIndexInformation('heart_function_index', $request->input('data'), $user->id);
+
+            return response()->success([]);
+        } catch (\Exception $e) {
+            return response()->fail($e->getMessage());
+        }
+    }
+
+    public function addImmunityIndexInformation()
+    {
+        View::addExtension('html', 'php');
+
+        return view('test');
+    }
+
+    public function addImmunityIndexInformationSubmit(Request $request)
+    {
+        try {
+            //验证参数
+            $this->validateFirstAddIndexInformation($request);
+
+            $user = $request->user();
+
+            $this->addIndexInformation('immunity_function_index', $request->input('data'), $user->id);
+
+            return response()->success([]);
+        } catch (\Exception $e) {
+            return response()->fail($e->getMessage());
+        }
+    }
+
+    public function addRoutineBloodIndexInformation()
+    {
+        View::addExtension('html', 'php');
+
+        return view('test');
+    }
+
+    public function addRoutineBloodIndexInformationSubmit(Request $request)
+    {
+        try {
+            //验证参数
+            $this->validateFirstAddIndexInformation($request);
+
+            $user = $request->user();
+
+            $this->addIndexInformation('routine_blood_index', $request->input('data'), $user->id);
+
+            return response()->success([]);
+        } catch (\Exception $e) {
+            return response()->fail($e->getMessage());
+        }
+    }
+
+    public function updateIndexData()
+    {
+        View::addExtension('html', 'php');
+
+        return view('test');
+    }
+
+    public function updateIndexDataSubmit(Request $request)
+    {
+        try {
+            //验证参数
+            $this->validateUpdateIndexData($request);
+
+            $user = $request->user();
+
+            switch ($request->function) {
+                case 'tumor':
+                    $field = 'tumour_function_index';
+                    break;
+                case 'liver':
+                    $field = 'liver_function_index';
+                    break;
+                case 'renal':
+                    $field = 'renal_function_index';
+                    break;
+                case 'heart':
+                    $field = 'heart_function_index';
+                    break;
+                case 'immunity':
+                    $field = 'immunity_function_index';
+                    break;
+                case 'routine_blood':
+                    $field = 'routine_blood_index';
+                    break;
+            }
+
+            $this->updateIndexInformation($field, $request->index, $request->data, $user->id);
+
+            return response()->success([]);
+        } catch (\Exception $e) {
+            return response()->fail($e->getMessage());
+        }
+    }
+
+    protected function validateUpdateIndexData(Request $request)
+    {
+        $this->validate($request, [
+            'function' => 'required|in:tumor,liver,renal,heart,immunity,routine_blood',
+            'index' => 'required|exists:ft2_indexes,alias',
+            'data' => 'required'
+        ]);
+    }
+
+    protected function updateIndexInformation($field, $index, $data, $userId)
+    {
+        $userInformation = $this->getUserInformation($userId);
+
+        $fieldData = $userInformation->$field ? json_decode($userInformation->$field, true) : [];
+
+        $fieldData[$index] = $data;
+
+        $userInformation->$field = json_encode($fieldData);
+
+        $userInformation->save();
     }
 }
