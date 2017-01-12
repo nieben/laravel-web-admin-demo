@@ -6,6 +6,7 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -38,7 +39,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-//        $this->middleware('guest');
+        $this->middleware('guest');
     }
 
     /**
@@ -48,7 +49,9 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
-        return view('auth.register');
+        View::addExtension('html', 'php');
+
+        return view('dist.signup');
     }
 
     /**
@@ -59,26 +62,40 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
-        $this->validator($request->all())->validate();
+        try {
+            $this->validateRegister($request);
 
-        if ($this->checkVerificationCode($request->input('mobile'), $request->input('verification_code'))) {
-            $user = $this->create($request->all());
+            if ($this->checkVerificationCode($request->input('mobile'), $request->input('verification_code'))) {
+                $user = $this->create($request->all());
 
-            $this->guard()->login($user);
+                $this->guard()->login($user);
 
-            return response()->success([
-                'redirect' => '/user/basic_information'
-            ]);
-        } else {
-            return response()->fail('验证码错误！');
+                return response()->success([
+                    'redirect' => '/user/basic_information'
+                ]);
+            } else {
+                throw new \Exception('验证码错误！');
+            }
+        } catch (\Exception $e) {
+            return response()->fail($e->getMessage());
         }
     }
 
     protected function checkVerificationCode($mobile, $verificationCode) {
-        return TRUE;
+//        return TRUE;
         $rVerificationCode = Redis::get('ft2_verification_code:'.$mobile);
 
         return ($verificationCode == $rVerificationCode);
+    }
+
+    protected function validateRegister(Request $request)
+    {
+        $this->validate($request, [
+            'nickname' => 'required|max:255|unique:ft2_users,nickname',
+            'mobile' => 'required|unique:ft2_users,mobile',
+            'verification_code' => 'required',
+            'password' => 'required|min:6',
+        ]);
     }
 
     /**
@@ -105,12 +122,16 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $newUser = new User([
             'nickname' => $data['nickname'],
             'mobile' => $data['mobile'],
             'password' => bcrypt($data['password']),
             'avatar' => $this->getRandomAvatar()
         ]);
+
+        $newUser->save();
+
+        return $newUser;
     }
 
     protected function getRandomAvatar()

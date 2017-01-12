@@ -16,7 +16,9 @@ class ForumController extends Controller
 {
     public function index()
     {
-        return view('home',['active' => 'home']);
+        View::addExtension('html', 'php');
+
+        return view('dist.forum');
     }
 
     public function getIndexData()
@@ -253,7 +255,7 @@ class ForumController extends Controller
 
         View::addExtension('html', 'php');
 
-        return view('test');
+        return view('dist.forumdetail');
     }
 
     public function getPostDetailData($id)

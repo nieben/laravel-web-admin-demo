@@ -80,12 +80,16 @@ Route::post('/quick_login', 'Auth\LoginController@quickLogin');
 Route::group(['middleware' => 'auth'], function () {
     //用户
     Route::group(['prefix' => 'user'], function () {
+        //用户类型选择
+        Route::get('/role', 'UserController@roleSelection');
+
         //补充注册信息
         Route::get('/supplementary_information', 'UserController@supplementaryInformation');
         Route::post('/supplementary_information', 'UserController@supplementaryInformationSubmit');
 
         //基本信息
-        Route::get('/basic_information', 'UserController@basicInformation');
+        Route::get('/basic_information/user', 'UserController@userBasicInformation');
+        Route::get('/basic_information/doctor', 'UserController@doctorBasicInformation');
         Route::post('/basic_information', 'UserController@basicInformationSubmit');
         Route::get('/basic_information/update', 'UserController@updateBasicInformation');
         Route::post('/basic_information/update', 'UserController@updateBasicInformationSubmit');

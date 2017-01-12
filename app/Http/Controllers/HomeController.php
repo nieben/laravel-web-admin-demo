@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
 
 class HomeController extends Controller
 {
@@ -19,7 +20,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home',['active' => 'home']);
+        View::addExtension('html', 'php');
+
+        return view('dist.index');
     }
 
     public function getIndexData(Request $request)

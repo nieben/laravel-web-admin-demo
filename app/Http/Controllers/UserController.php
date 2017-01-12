@@ -8,17 +8,23 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
 
 class UserController extends Controller
 {
-    public function basicInformation()
+    public function userBasicInformation()
     {
         View::addExtension('html', 'php');
 
-        return 'a';
+        return view('dist.baseinfo');
+    }
 
-        return view('test');
+    public function doctorBasicInformation()
+    {
+        View::addExtension('html', 'php');
+
+        return view('dist.doctorinfo');
     }
 
     public function basicInformationSubmit(Request $request)
@@ -82,7 +88,7 @@ class UserController extends Controller
     {
         View::addExtension('html', 'php');
 
-        return view('test');
+        return view('dist.signinfo');
     }
 
     public function supplementaryInformationSubmit(Request $request)
@@ -104,6 +110,13 @@ class UserController extends Controller
         }
     }
 
+    public function roleSelection()
+    {
+        View::addExtension('html', 'php');
+
+        return view('dist.usertype');
+    }
+
     protected function validateSupplementInformation(Request $request)
     {
         $this->validate($request, [
@@ -115,7 +128,7 @@ class UserController extends Controller
     {
         View::addExtension('html', 'php');
 
-        return view('test');
+        return view('dist.pathologyinfo');
     }
 
     public function pathologicalInformationSubmit(Request $request)
@@ -165,6 +178,8 @@ class UserController extends Controller
             $this->validateFirstAddIndexInformation($request);
 
             $user = $request->user();
+
+            Log::info('fielddata', (array)$user);
 
             $this->addIndexInformation('tumour_function_index', $request->input('data'), $user->id);
 
@@ -314,9 +329,11 @@ class UserController extends Controller
         if (! empty($userInformation)) {
             return $userInformation;
         } else {
-            return UserInformation::create([
-                'user_id' => $userId
-            ]);
+            $newUserInformation = new UserInformation();
+            $newUserInformation->user_id = $userId;
+            $newUserInformation->save();
+
+            return $newUserInformation;
         }
     }
 

@@ -50,7 +50,9 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
-        return view('auth.login');
+        View::addExtension('html', 'php');
+        
+        return view('dist.signin');
     }
 
     /**
