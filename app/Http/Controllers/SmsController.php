@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 use Mockery\CountValidator\Exception;
 use Illuminate\Support\Facades\Log;
@@ -39,7 +40,7 @@ class SmsController extends Controller
     {
         try {
             //现对手机号进行验证，注册时检查是否已经注册，登陆时检查是否注册
-            $user = User::table('ft2_users')->where('mobile', $to)->first();
+            $user = DB::table('ft2_users')->where('mobile', $to)->first();
 
             if ($action == 'register') {
                 if (! empty($user)) {
@@ -58,8 +59,8 @@ class SmsController extends Controller
             $datas = array($verification_code, '1');
 
             //写入缓存
-            Redis::set('ft2_verification_code:'.$to, $verification_code);
-            Redis::expire('ft2_verification_code:'.$to, 300);
+//            Redis::set('ft2_verification_code:'.$to, $verification_code);
+//            Redis::expire('ft2_verification_code:'.$to, 300);
 
             // 发送模板短信
             $result = $this->rest->sendTemplateSMS($to,$datas,$this->templateIDS['verification_code']);
