@@ -23,7 +23,7 @@ class REST {
 	private $Batch;  //时间戳
 	private $BodyType = "xml";//包体格式，可填值：json 、xml
 	private $enabeLog = true; //日志开关。可填值：true、
-	private $Filename="/web/feiteng/web/storage/logs/ccpsms.log"; //日志文件
+	private $Filename="./storage/logs/ccpsms.log"; //日志文件
 	private $Handle; 
 	function __construct($ServerIP,$ServerPort,$SoftVersion)	
 	{

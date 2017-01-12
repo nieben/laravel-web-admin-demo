@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -36,7 +38,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+//        $this->middleware('guest');
     }
 
     /**
@@ -73,7 +75,7 @@ class RegisterController extends Controller
     }
 
     protected function checkVerificationCode($mobile, $verificationCode) {
-//        return TRUE;
+        return TRUE;
         $rVerificationCode = Redis::get('ft2_verification_code:'.$mobile);
 
         return ($verificationCode == $rVerificationCode);
@@ -88,10 +90,10 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'nickname' => 'required|max:255',
-            'mobile' => 'required|unique:ft2_users',
+            'nickname' => 'required|max:255|unique:ft2_users,nickname',
+            'mobile' => 'required|unique:ft2_users,mobile',
             'verification_code' => 'required',
-            'password' => 'required',
+            'password' => 'required|min:6',
         ]);
     }
 

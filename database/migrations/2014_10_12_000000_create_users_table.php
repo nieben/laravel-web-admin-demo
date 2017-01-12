@@ -18,7 +18,7 @@ class CreateUsersTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('mobile')->unique()->comment('手机号，唯一');
-            $table->string('nickname')->nullable()->comment('昵称');
+            $table->string('nickname')->unique()->nullable()->comment('昵称');
             $table->string('avatar')->nullable()->comment('头像');
             $table->string('password')->nullable()->comment('密码');
             $table->tinyInteger('role')->default(0)->comment('角色 0:普通用户 1:医生(未认证) 2：医生(已认证) 3:管理员');

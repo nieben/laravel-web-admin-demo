@@ -61,9 +61,8 @@ Route::group(['prefix' => 'forum'], function () {
         //评论接口
         Route::post('/post/comment', 'ForumController@addPostComment');
         //帖子创建
-
+        Route::post('/post/create', 'ForumController@addPost');
     });
-    Route::post('/post/create', 'ForumController@addPost');
 });
 
 //所有启用状态标签
@@ -72,13 +71,13 @@ Route::get('/labels', 'LabelController@getActiveLabels');
 //上传图片接口
 Route::post('/upload_image', 'FileController@uploadImage');
 
+//短信验证码
+Route::get('/verification_sms/{action}/{mobile}', 'SmsController@sendVerificationSms');
+
+//快捷登陆
+Route::post('/quick_login', 'Auth\LoginController@quickLogin');
+
 Route::group(['middleware' => 'auth'], function () {
-    //短信验证码
-    Route::get('/verification_sms/{action}/{mobile}', 'SmsController@sendVerificationSms');
-
-    //快捷登陆
-    Route::post('/quick_login', 'Auth\LoginController@quickLogin');
-
     //用户
     Route::group(['prefix' => 'user'], function () {
         //补充注册信息
@@ -100,41 +99,26 @@ Route::group(['middleware' => 'auth'], function () {
         //肿瘤功能指标首次填写
         Route::get('/tumor_function_index/first_add', 'UserController@firstAddTumorIndexInformation');
         Route::post('/tumor_function_index/first_add', 'UserController@firstAddTumorIndexInformationSubmit');
-        //新增肿瘤指标
-        Route::get('/tumor_function_index/add', 'UserController@addTumorIndexInformation');
-        Route::post('/tumor_function_index/add', 'UserController@addTumorIndexInformationSubmit');
 
         //肝功能指标首次填写
         Route::get('/liver_function_index/first_add', 'UserController@firstAddLiverIndexInformation');
         Route::post('/liver_function_index/first_add', 'UserController@firstAddLiverIndexInformationSubmit');
-        //新增肝功能指标
-        Route::get('/liver_function_index/add', 'UserController@addLiverIndexInformation');
-        Route::post('/liver_function_index/add', 'UserController@addLiverIndexInformationSubmit');
 
         //肾功能指标首次填写
         Route::get('/renal_function_index/first_add', 'UserController@firstAddRenalIndexInformation');
         Route::post('/renal_function_index/first_add', 'UserController@firstAddRenalIndexInformationSubmit');
-        //新增指标
-        Route::get('/renal_function_index/add', 'UserController@addRenalIndexInformation');
-        Route::post('/renal_function_index/add', 'UserController@addRenalIndexInformationSubmit');
 
         //心脏功能指标首次填写
         Route::get('/heart_function_index/first_add', 'UserController@firstAddHeartIndexInformation');
         Route::post('/heart_function_index/first_add', 'UserController@firstAddHeartIndexInformationSubmit');
-        //新增指标
-        Route::get('/heart_function_index/add', 'UserController@addHeartIndexInformation');
-        Route::post('/heart_function_index/add', 'UserController@addHeartIndexInformationSubmit');
 
         //免疫功能指标首次填写
         Route::get('/immunity_function_index/first_add', 'UserController@firstAddImmunityIndexInformation');
         Route::post('/immunity_function_index/first_add', 'UserController@firstAddImmunityIndexInformationSubmit');
-        //新增指标
-        Route::get('/immunity_function_index/add', 'UserController@addImmunityIndexInformation');
-        Route::post('/immunity_function_index/add', 'UserController@addImmunityIndexInformationSubmit');
 
-        //新增血常规指标
-        Route::get('/routine_blood_index/add', 'UserController@addRoutineBloodIndexInformation');
-        Route::post('/routine_blood_index/add', 'UserController@addRoutineBloodIndexInformationSubmit');
+        //新增报告单
+        Route::get('/index_information/add', 'UserController@addIndexData');
+        Route::post('/index_information/add', 'UserController@addIndexDataSubmit');
 
         //指标信息修改
         Route::get('/index_information/update', 'UserController@updateIndexData');
@@ -146,6 +130,8 @@ Route::group(['middleware' => 'auth'], function () {
     });
 });
 
+//获取指标信息
+Route::get('/index/{type}', 'IndexController@getIndexes');
 
 Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::get('login', 'Auth\LoginController@showLoginForm')->name('admin.login');
