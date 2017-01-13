@@ -404,14 +404,14 @@ class UserController extends Controller
         $indexData = json_decode($userInformation->$field, true);
         
         //获取所有index信息
-        $indexes = indexDbSourcesWithColumn(DB::table('ft2_indexes')->get(), 'alias');
+        $indexes = indexDbSourcesWithColumn(DB::table('ft2_indexes')->get(), 'name');
 
         $indexDataGenerated = [];
 
         foreach ($indexData as $key => $row) {
             $indexDataGenerated[] = [
-                'name' => $indexes[$key]->name,
-                'alias' => $key,
+                'name' => $key,
+                'alias' => $indexes[$key]->alias,
                 'important' => $indexes[$key]->important,
                 'data' => $row
             ];
