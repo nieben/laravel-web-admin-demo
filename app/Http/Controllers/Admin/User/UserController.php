@@ -213,21 +213,6 @@ class UserController extends Controller
         return $data[$index];
     }
 
-    protected function extractAllData($jsonData)
-    {
-        $data = json_decode($jsonData, true);
-
-        $dataGenerated = [];
-
-        foreach ($data as $key => $row) {
-            foreach ($row as $sKey => $value) {
-                $dataGenerated[$sKey] = $value;
-            }
-        }
-
-        return $dataGenerated;
-    }
-
     public function getIndexData(Request $request)
     {
         $type = $request->input('type');
@@ -271,12 +256,6 @@ class UserController extends Controller
             }
 
             $data['data'] = json_decode($userInformation->$field, true);
-
-//            if ($index === '0') {  //所有指标信息
-//                $data['data'] = $this->extractAllData($userInformation->$field);
-//            } else {
-//                $data['data'] = $this->extractData($userInformation->$field, $index);
-//            }
 
             return view('admin.user.indexDataChangeIndex', $data);
         }

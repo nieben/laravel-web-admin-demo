@@ -418,6 +418,8 @@ class ForumController extends Controller
                 $newComment->user_id = $user->id;
                 $newComment->content = $content;
                 $newComment->save();
+
+                $data['comment_id'] = $newComment->id;
             } elseif ($commentId !== null) {
                 $newResponse = new PostCommentResponse();
                 $newResponse->post_id = $post->id;
@@ -425,6 +427,8 @@ class ForumController extends Controller
                 $newResponse->user_id = $user->id;
                 $newResponse->content = $content;
                 $newResponse->save();
+
+                $data['comment_response_id'] = $newResponse->id;
 
                 //评论的回复数量加1
                 $comment = PostComment::find($commentId);
@@ -441,6 +445,8 @@ class ForumController extends Controller
                 $newResponse->content = $content;
                 $newResponse->save();
 
+                $data['comment_response_id'] = $newResponse->id;
+
                 //评论的回复数量加1
                 $comment = PostComment::find($response->post_comment_id);
                 $comment->response_number += 1;
@@ -454,7 +460,7 @@ class ForumController extends Controller
             $post->last_response = Date('Y-m-d H:i:s');
             $post->save();
 
-            return response()->success([]);
+            return response()->success($data);
         } catch (\Exception $e) {
             return response()->fail($e->getMessage());
         }

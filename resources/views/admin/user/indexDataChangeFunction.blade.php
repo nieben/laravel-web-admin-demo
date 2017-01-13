@@ -14,7 +14,7 @@
     </div>
     &nbsp;&nbsp;
     <div class="form-group" style="width: 10%">
-        <select class="form-control" id="role" name="role">
+        <select class="form-control" id="index" name="index">
             <option value="0">全部</option>
             @foreach ($userInformation['indexes'] as $value)
                 <option value="{{$value}}">{{$value}}</option>
@@ -23,17 +23,19 @@
     </div>
 </form>
 
-<table class="table table-bordered product-table">
+<br/>
+
+<table id="core_data_table" class="table table-bordered product-table">
     <tbody>
     <tr>
         <th></th>
-        @foreach ($userInformation['data'] as $key => $value)
+        @foreach ($userInformation['data'][$userInformation['indexes'][0]] as $key => $value)
             <th>{{$key}}</th>
         @endforeach
     </tr>
     <tr>
         <td>{{$userInformation['indexes'][0]}}</td>
-        @foreach ($userInformation['data'] as $key => $value)
+        @foreach ($userInformation['data'][$userInformation['indexes'][0]] as $key => $value)
             <td>{{$value}}</td>
         @endforeach
     </tr>

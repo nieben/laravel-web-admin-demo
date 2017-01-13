@@ -121,44 +121,44 @@ class IndexTableSeeder extends Seeder
             'name' => '碱性磷酸酶',
             'alias' => 'ALP'
         ],[
+            'id' => 19,
+            'type' => 'liver',
+            'important' => 0,
+            'name' => '球蛋白',
+            'alias' => 'GLB'
+        ],[
+            'id' => 20,
+            'type' => 'liver',
+            'important' => 0,
+            'name' => '白球比例',
+            'alias' => 'A/G'
+        ],[
+            'id' => 21,
+            'type' => 'liver',
+            'important' => 0,
+            'name' => '谷草/谷丙',
+            'alias' => 'AST/ALT'
+        ],[
+            'id' => 22,
+            'type' => 'liver',
+            'important' => 0,
+            'name' => '谷氨酰转肽酶',
+            'alias' => 'γGT'
+        ],[
             'id' => 1,
-            'type' => '',
+            'type' => 'liver',
             'important' => 0,
             'name' => '',
             'alias' => ''
         ],[
             'id' => 1,
-            'type' => '',
+            'type' => 'liver',
             'important' => 0,
             'name' => '',
             'alias' => ''
         ],[
             'id' => 1,
-            'type' => '',
-            'important' => 0,
-            'name' => '',
-            'alias' => ''
-        ],[
-            'id' => 1,
-            'type' => '',
-            'important' => 0,
-            'name' => '',
-            'alias' => ''
-        ],[
-            'id' => 1,
-            'type' => '',
-            'important' => 0,
-            'name' => '',
-            'alias' => ''
-        ],[
-            'id' => 1,
-            'type' => '',
-            'important' => 0,
-            'name' => '',
-            'alias' => ''
-        ],[
-            'id' => 1,
-            'type' => '',
+            'type' => 'liver',
             'important' => 0,
             'name' => '',
             'alias' => ''

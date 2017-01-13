@@ -40,6 +40,10 @@ class ArticleController extends Controller
             if ($user = Auth::user()) {
                 $data['has_login'] = 1;
 
+                $data['nickname'] = $user->nickname;
+
+                $data['avatar'] = $user->avatar;
+
                 //注册时间大于CAN_COMMENT_AFTER_REGISTRATION值时，可以评论
                 $userCreateAt = $user->created_at;
 
@@ -184,6 +188,8 @@ class ArticleController extends Controller
                 $newComment->user_id = $user->id;
                 $newComment->content = $content;
                 $newComment->save();
+
+                $data['comment_id'] = $newComment->id;
             } elseif ($commentId !== null) {
                 $newResponse = new ArticleCommentResponse();
                 $newResponse->article_id = $article->id;
@@ -191,6 +197,8 @@ class ArticleController extends Controller
                 $newResponse->user_id = $user->id;
                 $newResponse->content = $content;
                 $newResponse->save();
+
+                $data['comment_response_id'] = $newResponse->id;
                 
                 //评论的回复数量加1
                 $comment = ArticleComment::find($commentId);
@@ -207,6 +215,8 @@ class ArticleController extends Controller
                 $newResponse->content = $content;
                 $newResponse->save();
 
+                $data['comment_response_id'] = $newResponse->id;
+
                 //评论的回复数量加1
                 $comment = ArticleComment::find($response->article_comment_id);
                 $comment->response_number += 1;
@@ -220,7 +230,7 @@ class ArticleController extends Controller
             $article->last_response = Date('Y-m-d H:i:s');
             $article->save();
 
-            return response()->success([]);
+            return response()->success($data);
         } catch (\Exception $e) {
             return response()->fail($e->getMessage());
         }
