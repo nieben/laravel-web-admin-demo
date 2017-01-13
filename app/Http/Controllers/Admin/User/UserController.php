@@ -138,50 +138,56 @@ class UserController extends Controller
         }
 
         if ($userInformation->tumour_function_index != null) {
-            $userInformationGenerated['functions'][] = ['tumour' => '肿瘤'];
+            $userInformationGenerated['functions']['tumour'] = '肿瘤';
             if (empty($userInformationGenerated['indexes']) && ($function == null or $function == 'tumour')) {
                 $userInformationGenerated['indexes'] = $this->extractIndexes($userInformation->tumour_function_index);
                 $userInformationGenerated['data'] = $this->extractData($userInformation->tumour_function_index, $userInformationGenerated['indexes'][0]);
+                $userInformationGenerated['data'] = json_decode($userInformation->tumour_function_index, true);
             }
         }
 
         if ($userInformation->liver_function_index != null) {
-            $userInformationGenerated['functions'][] = ['liver' => '肝功能'];
+            $userInformationGenerated['functions']['liver'] = '肝功能';
             if (empty($userInformationGenerated['indexes'])  && ($function == null or $function == 'liver')) {
                 $userInformationGenerated['indexes'] = $this->extractIndexes($userInformation->liver_function_index);
                 $userInformationGenerated['data'] = $this->extractData($userInformation->liver_function_index, $userInformationGenerated['indexes'][0]);
+                $userInformationGenerated['data'] = json_decode($userInformation->liver_function_index, true);
             }
         }
 
         if ($userInformation->renal_function_index != null) {
-            $userInformationGenerated['functions'][] = ['renal' => '肾功能'];
+            $userInformationGenerated['functions']['renal'] = '肾功能';
             if (empty($userInformationGenerated['indexes'])  && ($function == null or $function == 'renal')) {
                 $userInformationGenerated['indexes'] = $this->extractIndexes($userInformation->renal_function_index);
                 $userInformationGenerated['data'] = $this->extractData($userInformation->renal_function_index, $userInformationGenerated['indexes'][0]);
+                $userInformationGenerated['data'] = json_decode($userInformation->renal_function_index, true);
             }
         }
 
         if ($userInformation->heart_function_index != null) {
-            $userInformationGenerated['functions'][] = ['heart' => '心脏功能'];
+            $userInformationGenerated['functions']['heart'] = '心脏功能';
             if (empty($userInformationGenerated['indexes'])  && ($function == null or $function == 'heart')) {
                 $userInformationGenerated['indexes'] = $this->extractIndexes($userInformation->heart_function_index);
                 $userInformationGenerated['data'] = $this->extractData($userInformation->heart_function_index, $userInformationGenerated['indexes'][0]);
+                $userInformationGenerated['data'] = json_decode($userInformation->heart_function_index, true);
             }
         }
 
         if ($userInformation->immunity_function_index != null) {
-            $userInformationGenerated['functions'][] = ['immunity' => '免疫功能'];
+            $userInformationGenerated['functions']['immunity'] = '免疫功能';
             if (empty($userInformationGenerated['indexes'])  && ($function == null or $function == 'immunity')) {
                 $userInformationGenerated['indexes'] = $this->extractIndexes($userInformation->immunity_function_index);
                 $userInformationGenerated['data'] = $this->extractData($userInformation->immunity_function_index, $userInformationGenerated['indexes'][0]);
+                $userInformationGenerated['data'] = json_decode($userInformation->immunity_function_index, true);
             }
         }
 
         if ($userInformation->routine_blood_index != null) {
-            $userInformationGenerated['functions'][] = ['blood' => '血常规'];
+            $userInformationGenerated['functions']['blood'] = '血常规';
             if (empty($userInformationGenerated['indexes'])  && ($function == null or $function == 'blood')) {
                 $userInformationGenerated['indexes'] = $this->extractIndexes($userInformation->routine_blood_index);
                 $userInformationGenerated['data'] = $this->extractData($userInformation->routine_blood_index, $userInformationGenerated['indexes'][0]);
+                $userInformationGenerated['data'] = json_decode($userInformation->routine_blood_index, true);
             }
         }
 
@@ -207,6 +213,21 @@ class UserController extends Controller
         return $data[$index];
     }
 
+    protected function extractAllData($jsonData)
+    {
+        $data = json_decode($jsonData, true);
+
+        $dataGenerated = [];
+
+        foreach ($data as $key => $row) {
+            foreach ($row as $sKey => $value) {
+                $dataGenerated[$sKey] = $value;
+            }
+        }
+
+        return $dataGenerated;
+    }
+
     public function getIndexData(Request $request)
     {
         $type = $request->input('type');
@@ -230,24 +251,32 @@ class UserController extends Controller
 
             switch ($function) {
                 case 'tumour':
-                    $data['data'] = $this->extractData($userInformation->tumour_function_index, $index);
+                    $field = 'tumour_function_index';
                     break;
                 case 'liver':
-                    $data['data'] = $this->extractData($userInformation->liver_function_index, $index);
+                    $field = 'liver_function_index';
                     break;
                 case 'renal':
-                    $data['data'] = $this->extractData($userInformation->renal_function_index, $index);
+                    $field = 'renal_function_index';
                     break;
                 case 'heart':
-                    $data['data'] = $this->extractData($userInformation->heart_function_index, $index);
+                    $field = 'heart_function_index';
                     break;
                 case 'immunity':
-                    $data['data'] = $this->extractData($userInformation->immunity_function_index, $index);
+                    $field = 'immunity_function_index';
                     break;
                 case 'blood':
-                    $data['data'] = $this->extractData($userInformation->routine_blood_index, $index);
+                    $field = 'routine_blood_index';
                     break;
             }
+
+            $data['data'] = json_decode($userInformation->$field, true);
+
+//            if ($index === '0') {  //所有指标信息
+//                $data['data'] = $this->extractAllData($userInformation->$field);
+//            } else {
+//                $data['data'] = $this->extractData($userInformation->$field, $index);
+//            }
 
             return view('admin.user.indexDataChangeIndex', $data);
         }

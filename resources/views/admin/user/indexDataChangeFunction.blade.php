@@ -15,7 +15,7 @@
     &nbsp;&nbsp;
     <div class="form-group" style="width: 10%">
         <select class="form-control" id="role" name="role">
-            <option value="">全部</option>
+            <option value="0">全部</option>
             @foreach ($userInformation['indexes'] as $value)
                 <option value="{{$value}}">{{$value}}</option>
             @endforeach
@@ -28,13 +28,13 @@
     <tr>
         <th></th>
         @foreach ($userInformation['data'] as $key => $value)
-            <th>$key</th>
+            <th>{{$key}}</th>
         @endforeach
     </tr>
     <tr>
         <td>{{$userInformation['indexes'][0]}}</td>
         @foreach ($userInformation['data'] as $key => $value)
-            <td>$value</td>
+            <td>{{$value}}</td>
         @endforeach
     </tr>
     </tbody>

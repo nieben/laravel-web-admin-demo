@@ -130,7 +130,7 @@
                                 &nbsp;&nbsp;
                                 <div class="form-group" style="width: 10%">
                                     <select class="form-control" id="index" name="index">
-                                        <option value="">全部</option>
+                                        <option value="0">全部</option>
                                         @foreach ($userInformation['indexes'] as $value)
                                             <option value="{{$value}}">{{$value}}</option>
                                         @endforeach
@@ -138,18 +138,20 @@
                                 </div>
                             </form>
 
+                            <br/>
+
                             <table id="core_data_table" class="table table-bordered product-table">
                                 <tbody>
                                 <tr>
                                     <th></th>
-                                    @foreach ($userInformation['data'] as $key => $value)
-                                        <th>$key</th>
+                                    @foreach ($userInformation['data'][$userInformation['indexes'][0]] as $key => $value)
+                                        <th>{{$key}}</th>
                                     @endforeach
                                 </tr>
                                 <tr>
                                     <td>{{$userInformation['indexes'][0]}}</td>
-                                    @foreach ($userInformation['data'] as $key => $value)
-                                        <td>$value</td>
+                                    @foreach ($userInformation['data'][$userInformation['indexes'][0]] as $key => $value)
+                                        <td>{{$value}}</td>
                                     @endforeach
                                 </tr>
                                 </tbody>
@@ -170,7 +172,9 @@
 @section('javascript')
     <script>
         $(document).on('change','#function',function(){
-            var data = $("#edit_article_form").serialize();
+            var data = $("#search_indexes_form").serializeArray();
+
+            console.log(data);
 
             var type = {
                 'name': 'type',
@@ -180,7 +184,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: $("#edit_article_form").attr('action'),
+                url: $("#search_indexes_form").attr('action'),
                 data: data,
                 success: function(result){
                     $("div#core_data").html(result);
@@ -189,7 +193,7 @@
         });
 
         $(document).on('change','#index',function(){
-            var data = $("#edit_article_form").serialize();
+            var data = $("#search_indexes_form").serializeArray();
 
             var type = {
                 'name': 'type',
@@ -199,7 +203,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: $("#edit_article_form").attr('action'),
+                url: $("#search_indexes_form").attr('action'),
                 data: data,
                 success: function(result){
                     $("table#core_data_table").html(result);
