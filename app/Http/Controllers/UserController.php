@@ -120,7 +120,8 @@ class UserController extends Controller
     protected function validateSupplementInformation(Request $request)
     {
         $this->validate($request, [
-            'nickname' => 'required|max:255', 'password' => 'required',
+            'nickname' => 'required|max:255|unique:ft2_users,nickname|regex:/^[\x{4e00}-\x{9fa5}A-Za-z0-9_]+$/u',
+            'password' => 'required|min:6',
         ]);
     }
 
@@ -179,11 +180,10 @@ class UserController extends Controller
 
             $user = $request->user();
 
-            Log::info('fielddata', (array)$user);
-
-            $this->addIndexInformation('tumour_function_index', $request->input('data'), $user->id);
+            $defaultDate = $this->addIndexInformation('tumour_function_index', $request->input('data'), $user->id);
 
             return response()->success([
+                'default_date' => $defaultDate,
                 'redirect' => '/user/liver_function_index/first_add',
                 'skip_redirect' => '/user/renal_function_index/first_add'
             ]);
@@ -207,9 +207,10 @@ class UserController extends Controller
 
             $user = $request->user();
 
-            $this->addIndexInformation('liver_function_index', $request->input('data'), $user->id);
+            $defaultDate = $this->addIndexInformation('liver_function_index', $request->input('data'), $user->id);
 
             return response()->success([
+                'default_date' => $defaultDate,
                 'redirect' => '/user/renal_function_index/first_add',
                 'skip_redirect' => '/user/heart_function_index/first_add'
             ]);
@@ -233,9 +234,10 @@ class UserController extends Controller
 
             $user = $request->user();
 
-            $this->addIndexInformation('renal_function_index', $request->input('data'), $user->id);
+            $defaultDate = $this->addIndexInformation('renal_function_index', $request->input('data'), $user->id);
 
             return response()->success([
+                'default_date' => $defaultDate,
                 'redirect' => '/user/heart_function_index/first_add',
                 'skip_redirect' => '/user/immunity_function_index/first_add'
             ]);
@@ -259,9 +261,10 @@ class UserController extends Controller
 
             $user = $request->user();
 
-            $this->addIndexInformation('heart_function_index', $request->input('data'), $user->id);
+            $defaultDate = $this->addIndexInformation('heart_function_index', $request->input('data'), $user->id);
 
             return response()->success([
+                'default_date' => $defaultDate,
                 'redirect' => '/user/immunity_function_index/first_add',
                 'skip_redirect' => '/home'
             ]);
@@ -285,9 +288,10 @@ class UserController extends Controller
 
             $user = $request->user();
 
-            $this->addIndexInformation('immunity_function_index', $request->input('data'), $user->id);
+            $defaultDate = $this->addIndexInformation('immunity_function_index', $request->input('data'), $user->id);
 
             return response()->success([
+                'default_date' => $defaultDate,
                 'redirect' => '/home',
             ]);
         } catch (\Exception $e) {
@@ -308,11 +312,17 @@ class UserController extends Controller
 
         $fieldData = $userInformation->$field ? json_decode($userInformation->$field, true) : [];
 
+        $defaultDate = '';
+
         foreach ($data as $key => $row) {
             //都存为大写形式
             $index = strtoupper($row['index']);
 
             $fieldData[$index][$row['date']] = $row['value'];
+
+            if ($index != 'TUMOR SIZE') {
+                $defaultDate = $row['date'];
+            }
         }
 
         //重新对index进行升序排序
@@ -320,6 +330,8 @@ class UserController extends Controller
 
         $userInformation->$field = json_encode($fieldData);
         $userInformation->save();
+
+        return $defaultDate;
     }
 
     protected function getUserInformation($userId)
@@ -532,9 +544,11 @@ class UserController extends Controller
                     break;
             }
 
-            $this->addIndexInformation($field, $request->input('data'), $user->id);
+            $defaultDate = $this->addIndexInformation($field, $request->input('data'), $user->id);
 
-            return response()->success([]);
+            return response()->success([
+                'default_date' => $defaultDate
+            ]);
         } catch (\Exception $e) {
             return response()->fail($e->getMessage());
         }

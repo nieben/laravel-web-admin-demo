@@ -91,7 +91,7 @@ class RegisterController extends Controller
     protected function validateRegister(Request $request)
     {
         $this->validate($request, [
-            'nickname' => 'required|max:255|unique:ft2_users,nickname',
+            'nickname' => 'required|max:255|unique:ft2_users,nickname|regex:/^[\x{4e00}-\x{9fa5}A-Za-z0-9_]+$/u',
             'mobile' => 'required|unique:ft2_users,mobile',
             'verification_code' => 'required',
             'password' => 'required|min:6',

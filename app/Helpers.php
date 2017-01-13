@@ -103,7 +103,13 @@ if ( ! function_exists('getDiagnosisDuration'))
         if ($diagnosisTime) {
             return $diagnosisTime;
         } else {
-            return $diffDate['day'] > 0 ? $diffDate['year'].'天' : '';
+            if ($diffDate['day'] > 0) {
+                return $diffDate['year'].'天';
+            } else {  //小时
+                $hours = intval((time() - $diagnosisTime) / 3600);
+
+                return $hours.'小时';
+            }
         }
     }
 }
