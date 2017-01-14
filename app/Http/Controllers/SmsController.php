@@ -59,8 +59,8 @@ class SmsController extends Controller
             $datas = array($verification_code, '1');
 
             //写入缓存
-//            Redis::set('ft2_verification_code:'.$to, $verification_code);
-//            Redis::expire('ft2_verification_code:'.$to, 300);
+            Redis::set('ft2_verification_code:'.$to, $verification_code);
+            Redis::expire('ft2_verification_code:'.$to, 300);
 
             // 发送模板短信
             $result = $this->rest->sendTemplateSMS($to,$datas,$this->templateIDS['verification_code']);
