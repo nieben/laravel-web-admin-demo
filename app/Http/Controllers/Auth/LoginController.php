@@ -108,7 +108,11 @@ class LoginController extends Controller
         //先验证验证码是否正确
         if ($this->checkVerificationCode($request->input('mobile'), $request->input('verification_code'))) {
             //检查是否为系统用户
-            if ($this->attemptQuickLogin($request)) {
+            if ($this->isUser($request->input('mobile'))) {
+                $user = User::where('mobile', $request->input('mobile'))->first();
+
+                $this->guard()->login($user);
+                
                 return $this->sendLoginResponse($request);
             } else {
                 //如果是活动用户，在本系统创建用户，并引导填写补充信息
