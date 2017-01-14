@@ -99,7 +99,8 @@ class ForumController extends Controller
         foreach ($labels as $key => $row) {
             $labelsGenerated[] = [
                 'id' => $row->id,
-                'name' => $row->name
+                'name' => $row->name,
+                'selected' => false
             ];
         }
 
@@ -118,7 +119,8 @@ class ForumController extends Controller
 
              $sectionsGenerated[$row->id]['sub_sections'][] = [
                  'id' => $row->sub_id,
-                 'name' => $row->sub_name
+                 'name' => $row->sub_name,
+                 'selected' => $row->sub_id == Config::get('constants.DEFAULT_DISPLAY_SECTION_ID') ? true : false
              ];
          }
 

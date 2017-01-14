@@ -77,6 +77,9 @@ Route::get('/verification_sms/{action}/{mobile}', 'SmsController@sendVerificatio
 //快捷登陆
 Route::post('/quick_login', 'Auth\LoginController@quickLogin');
 
+//基因突变和疾病分期数据接口
+Route::get('/pathologic_data', 'PathologyController@getPathologicData');
+
 Route::group(['middleware' => 'auth'], function () {
     //用户
     Route::group(['prefix' => 'user'], function () {
