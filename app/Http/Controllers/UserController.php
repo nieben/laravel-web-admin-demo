@@ -319,13 +319,15 @@ class UserController extends Controller
         $defaultDate = '';
 
         foreach ($data as $key => $row) {
-            //都存为大写形式
-            $index = strtoupper($row['index']);
+            if (trim($row['value']) != '' && trim($row['date']) != '') {  //如果时间和值都非空，则添加
+                //都存为大写形式
+                $index = strtoupper($row['index']);
 
-            $fieldData[$index][$row['date']] = $row['value'];
+                $fieldData[$index][$row['date']] = $row['value'];
 
-            if ($index != '肿瘤大小') {
-                $defaultDate = $row['date'];
+                if ($index != '肿瘤大小 (最大直径)') {
+                    $defaultDate = $row['date'];
+                }
             }
         }
 

@@ -104,7 +104,7 @@ if ( ! function_exists('getDiagnosisDuration'))
             return $diagnosisTime;
         } else {
             if ($diffDate['day'] > 0) {
-                return $diffDate['year'].'天';
+                return $diffDate['day'].'天';
             } else {  //小时
                 $hours = intval((time() - $diagnosisTime) / 3600);
 

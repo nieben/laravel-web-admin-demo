@@ -27,17 +27,34 @@
 
 <table id="core_data_table" class="table table-bordered product-table">
     <tbody>
-    <tr>
-        <th></th>
-        @foreach ($userInformation['data'][$userInformation['indexes'][0]] as $key => $value)
-            <th>{{$key}}</th>
-        @endforeach
-    </tr>
-    <tr>
-        <td>{{$userInformation['indexes'][0]}}</td>
-        @foreach ($userInformation['data'][$userInformation['indexes'][0]] as $key => $value)
-            <td>{{$value}}</td>
-        @endforeach
-    </tr>
+    @foreach ($userInformation['data'] as $key => $row)
+        <tr>
+            <th></th>
+            @foreach ($userInformation['data'][$key] as $sKey => $value)
+                <th>{{$sKey}}</th>
+            @endforeach
+        </tr>
+        <tr>
+            <td>{{$key}}</td>
+            @foreach ($userInformation['data'][$key] as $sKey => $value)
+                <td>{{$value}}</td>
+            @endforeach
+        </tr>
+    @endforeach
     </tbody>
+
+    {{--<tbody>--}}
+    {{--<tr>--}}
+        {{--<th></th>--}}
+        {{--@foreach ($userInformation['data'][$userInformation['indexes'][0]] as $key => $value)--}}
+            {{--<th>{{$key}}</th>--}}
+        {{--@endforeach--}}
+    {{--</tr>--}}
+    {{--<tr>--}}
+        {{--<td>{{$userInformation['indexes'][0]}}</td>--}}
+        {{--@foreach ($userInformation['data'][$userInformation['indexes'][0]] as $key => $value)--}}
+            {{--<td>{{$value}}</td>--}}
+        {{--@endforeach--}}
+    {{--</tr>--}}
+    {{--</tbody>--}}
 </table>
