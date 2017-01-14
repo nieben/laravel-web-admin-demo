@@ -145,7 +145,7 @@ class LoginController extends Controller
     protected function isActivityUser($mobile)
     {
         //肺腾活动系统user表，线上环境部署在同一个数据库
-        $user = DB::table('users')->where('mobile', $mobile)->first();
+        $user = DB::connection('feiteng')->table('users')->where('mobile', $mobile)->first();
 
         return empty($user) ? false : true;
     }

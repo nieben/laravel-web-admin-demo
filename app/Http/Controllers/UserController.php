@@ -68,9 +68,9 @@ class UserController extends Controller
         if ($request->input('role') == '0') {   //患者或家属
             $this->validate($request, [
                 'sex' => 'required|in:F,M',
-                'birthday' => 'required|date_format:YYYY-mm-dd',
+                'birthday' => 'required|date_format:Y-m-d',
                 'smoke_history' => 'required|in:0,1',
-                'diagnosis_time' => 'required|date_format:YYYY-mm-dd',
+                'diagnosis_time' => 'required|date_format:Y-m-d',
             ]);
         } elseif ($request->input('role') == '1') {   //医生
             $this->validate($request, [
@@ -147,7 +147,7 @@ class UserController extends Controller
             $user->save();
 
             return response()->success([
-                'redirect' => '/user/basic_information'
+                'redirect' => '/user/tumor_function_index/first_add'
             ]);
         } catch (\Exception $e) {
             return response()->fail($e->getMessage());
@@ -181,6 +181,10 @@ class UserController extends Controller
             $user = $request->user();
 
             $defaultDate = $this->addIndexInformation('tumour_function_index', $request->input('data'), $user->id);
+
+            //标注用户注册信息填写完成
+            $user->information_filled = 1;
+            $user->save();
 
             return response()->success([
                 'default_date' => $defaultDate,
@@ -320,7 +324,7 @@ class UserController extends Controller
 
             $fieldData[$index][$row['date']] = $row['value'];
 
-            if ($index != 'TUMOR SIZE') {
+            if ($index != '肿瘤大小') {
                 $defaultDate = $row['date'];
             }
         }
@@ -464,9 +468,9 @@ class UserController extends Controller
         if ($user->role == 0) {   //患者或家属
             $this->validate($request, [
                 'sex' => 'required|in:F,M',
-                'birthday' => 'required|date_format:YYYY-mm-dd',
+                'birthday' => 'required|date_format:Y-m-d',
                 'smoke_history' => 'required|in:0,1',
-                'diagnosis_time' => 'required|date_format:YYYY-mm-dd',
+                'diagnosis_time' => 'required|date_format:Y-m-d',
             ]);
         } elseif ($user->role == 1) {   //医生
             $this->validate($request, [

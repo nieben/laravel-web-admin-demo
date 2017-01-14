@@ -11,30 +11,7 @@ class IndexController extends Controller
     public function getIndexes($type)
     {
         try {
-            switch ($type) {
-                case 'tumor':
-                    $field = 'tumour_function_index';
-                    break;
-                case 'liver':
-                    $field = 'liver_function_index';
-                    break;
-                case 'renal':
-                    $field = 'renal_function_index';
-                    break;
-                case 'heart':
-                    $field = 'heart_function_index';
-                    break;
-                case 'immunity':
-                    $field = 'immunity_function_index';
-                    break;
-                case 'routine_blood':
-                    $field = 'routine_blood_index';
-                    break;
-                default:
-                    throw new \Exception(Config::get('constants.PARAM_ERROR_MESSAGE'));
-            }
-
-            $indexes = DB::table('ft2_indexes')->where('type', $field)
+            $indexes = DB::table('ft2_indexes')->where('type', $type)
                 ->orderBy('important', 'desc')
                 ->orderby('id', 'asc')
                 ->get();
