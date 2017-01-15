@@ -121,6 +121,12 @@ class ArticleController extends Controller
 
                 foreach ($responses as $key => $row){
                     $createdAt[$key] = $row->created_at;
+
+                    if (property_exists($row, 'comment_id')) {
+                        $responses[$key]->comment_response_id = '';
+                    } else {
+                        $responses[$key]->comment_id = '';
+                    }
                 }
 
                 if (! empty($createdAt)) {
