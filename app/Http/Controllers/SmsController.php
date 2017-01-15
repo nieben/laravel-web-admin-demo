@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 use Mockery\CountValidator\Exception;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\View;
 
 require app_path().'/Libraries/Ccpsms/CCPRestSmsSDK.php';
 
