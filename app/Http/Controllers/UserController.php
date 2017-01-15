@@ -169,7 +169,7 @@ class UserController extends Controller
     {
         View::addExtension('html', 'php');
 
-        return view('test');
+        return view('dist.tumor');
     }
 
     public function firstAddTumorIndexInformationSubmit(Request $request)
@@ -200,7 +200,7 @@ class UserController extends Controller
     {
         View::addExtension('html', 'php');
 
-        return view('test');
+        return view('dist.liverfunction');
     }
 
     public function firstAddLiverIndexInformationSubmit(Request $request)
@@ -227,7 +227,7 @@ class UserController extends Controller
     {
         View::addExtension('html', 'php');
 
-        return view('test');
+        return view('dist.renalfunction');
     }
 
     public function firstAddRenalIndexInformationSubmit(Request $request)
@@ -254,7 +254,7 @@ class UserController extends Controller
     {
         View::addExtension('html', 'php');
 
-        return view('test');
+        return view('dist.heart');
     }
 
     public function firstAddHeartIndexInformationSubmit(Request $request)
@@ -281,7 +281,7 @@ class UserController extends Controller
     {
         View::addExtension('html', 'php');
 
-        return view('test');
+        return view('dist.immune');
     }
 
     public function firstAddImmunityIndexInformationSubmit(Request $request)
@@ -490,7 +490,7 @@ class UserController extends Controller
     {
         View::addExtension('html', 'php');
 
-        return view('test');
+        return view('dist.pathologyinfo');
     }
 
     public function updatePathologicalInformationSubmit(Request $request)
