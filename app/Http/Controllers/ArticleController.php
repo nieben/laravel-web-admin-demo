@@ -183,7 +183,7 @@ class ArticleController extends Controller
 
             $user = Auth::user();
 
-            if ($commentId === null && $commentResponseId === null) {  //评论
+            if ($commentId == null && $commentResponseId == null) {  //评论
                 $newComment = new ArticleComment();
                 $newComment->article_id = $article->id;
                 $newComment->user_id = $user->id;
@@ -191,7 +191,7 @@ class ArticleController extends Controller
                 $newComment->save();
 
                 $data['comment_id'] = $newComment->id;
-            } elseif ($commentId !== null) {
+            } elseif ($commentId != null) {
                 $newResponse = new ArticleCommentResponse();
                 $newResponse->article_id = $article->id;
                 $newResponse->article_comment_id = $commentId;
@@ -205,7 +205,7 @@ class ArticleController extends Controller
                 $comment = ArticleComment::find($commentId);
                 $comment->response_number += 1;
                 $comment->save();
-            } elseif ($commentResponseId !== null) {
+            } elseif ($commentResponseId != null) {
                 $response = ArticleCommentResponse::find($commentResponseId);
 
                 $newResponse = new ArticleCommentResponse();

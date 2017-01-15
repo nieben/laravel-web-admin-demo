@@ -415,7 +415,7 @@ class ForumController extends Controller
 
             $user = Auth::user();
 
-            if ($commentId === null && $commentResponseId === null) {  //评论
+            if ($commentId == null && $commentResponseId == null) {  //评论
                 $newComment = new PostComment();
                 $newComment->post_id = $post->id;
                 $newComment->user_id = $user->id;
@@ -423,7 +423,7 @@ class ForumController extends Controller
                 $newComment->save();
 
                 $data['comment_id'] = $newComment->id;
-            } elseif ($commentId !== null) {
+            } elseif ($commentId != null) {
                 $newResponse = new PostCommentResponse();
                 $newResponse->post_id = $post->id;
                 $newResponse->post_comment_id = $commentId;
@@ -437,7 +437,7 @@ class ForumController extends Controller
                 $comment = PostComment::find($commentId);
                 $comment->response_number += 1;
                 $comment->save();
-            } elseif ($commentResponseId !== null) {
+            } elseif ($commentResponseId != null) {
                 $response = PostCommentResponse::find($commentResponseId);
 
                 $newResponse = new PostCommentResponse();
