@@ -616,7 +616,7 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'function' => 'required|in:tumor,liver,renal,heart,immunity,routine_blood',
-            'index' => 'required|exists:ft2_indexes,alias',
+            'index' => 'required|exists:ft2_indexes,name,type,'.$request->function,
             'data' => 'required'
         ]);
     }

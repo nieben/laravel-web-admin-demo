@@ -26,7 +26,7 @@ class CreateUsersTable extends Migration
             $table->tinyInteger('information_filled')->default(0)->comment('信息是否填写过 0否 1是');
             $table->char('sex', 1)->nullable()->comment('性别 F/M');
             $table->date('birthday')->nullable()->comment('生日');
-            $table->tinyInteger('smoke_history')->nullable()->comment('吸烟史, 0:无 1:有');
+            $table->tinyInteger('smoke_history')->nullable()->comment('吸烟史, 1:无 2：五年以下 3:5-10年 4:10年以上');
             $table->string('real_name')->nullable()->comment('真实姓名');
             $table->string('hospital')->nullable()->comment('所在医院');
             $table->string('department')->nullable()->comment('所属科室');

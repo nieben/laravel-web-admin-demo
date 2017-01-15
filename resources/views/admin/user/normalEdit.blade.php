@@ -76,13 +76,13 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if($user->smoke_history == 0)
+                                        @if($user->smoke_history == 1)
                                             无
-                                        @elseif ($user->smoke_history == 1)
-                                            五年以下
                                         @elseif ($user->smoke_history == 2)
-                                            5-10年
+                                            五年以下
                                         @elseif ($user->smoke_history == 3)
+                                            5-10年
+                                        @elseif ($user->smoke_history == 4)
                                             10年以上
                                         @endif
                                     </td>
