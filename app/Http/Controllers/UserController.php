@@ -169,7 +169,7 @@ class UserController extends Controller
     {
         View::addExtension('html', 'php');
 
-        return view('dist.tumor');
+        return view('dist.tumour');
     }
 
     public function firstAddTumorIndexInformationSubmit(Request $request)
