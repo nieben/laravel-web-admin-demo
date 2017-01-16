@@ -138,7 +138,7 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 //获取指标信息
-Route::get('/index/{type}', 'IndexController@getIndexes');
+Route::get('/index/{type}/{important}', 'IndexController@getIndexes');
 
 Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::get('login', 'Auth\LoginController@showLoginForm')->name('admin.login');

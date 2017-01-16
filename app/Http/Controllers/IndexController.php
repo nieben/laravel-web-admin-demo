@@ -9,13 +9,27 @@ use Illuminate\Support\Facades\View;
 
 class IndexController extends Controller
 {
-    public function getIndexes($type)
+    public function getIndexes($type, $important)
     {
         try {
-            $indexes = DB::table('ft2_indexes')->where('type', $type)
-                ->orderBy('important', 'desc')
-                ->orderby('id', 'asc')
-                ->get();
+            $db = DB::table('ft2_indexes');
+            $db->where('type', $type);
+
+            if ($important == 1) {
+                $db->where('important', 1);
+
+                //注册肿瘤页面，需要肿瘤大小这个次重要项
+                if ($type == 'tumor') {
+                    $db->orWhere('alias', 'TUMOR SIZE');
+                }
+            } elseif ($important == 2) {
+                $db->where('important', 0);
+            }
+
+            $db->orderBy('important', 'desc')
+                ->orderby('id', 'asc');
+
+            $indexes = $db->get();
 
             return response()->success($this->generateIndexes($indexes));
         } catch (\Exception $e) {
