@@ -62,7 +62,23 @@ class ForumController extends Controller
                 ->where('disabled', 0)
                 ->get();
 
-            $data['treatment_labels'] = $this->generateLabels($treatmentLabels);
+            //筛选参数, 治疗方法
+            $data['filters'][] = [
+                'name' => 'treatment_labels',
+                'childs' => $this->generateLabels($treatmentLabels),
+            ];
+
+            //基因
+            $data['filters'][] = [
+                'name' => 'genic',
+                'childs' => $this->getGenicMutations(),
+            ];
+
+            //分期
+            $data['filters'][] = [
+                'name' => 'stage',
+                'childs' => $this->getDiseaseStages(),
+            ];
 
             $currentSection = DB::table('ft2_forum_sub_sections')
                 ->where('id', $data['current_section'])
@@ -90,6 +106,70 @@ class ForumController extends Controller
             return response()->success($data);
         } catch (\Exception $e) {
             return response()->fail($e->getMessage());
+        }
+    }
+
+    protected function getDiseaseStages()
+    {
+        $diseaseStages = DB::table('ft2_disease_stages')->get();
+
+        return $this->generateDiseaseStages($diseaseStages);
+    }
+
+    protected function generateDiseaseStages($diseaseStages)
+    {
+        $diseaseStagesGenerated = [];
+
+        foreach ($diseaseStages as $key => $row) {
+            $diseaseStagesGenerated[] = [
+                'name' => $row->name,
+                'selected' => false,
+                'childs' => $this->generateChild($row->sub_names)
+            ];
+        }
+
+        return $diseaseStagesGenerated;
+    }
+
+    protected function getGenicMutations()
+    {
+        $genicMutations = DB::table('ft2_genic_mutations')->get();
+
+        return $this->generateGenicMutations($genicMutations);
+    }
+
+    protected function generateGenicMutations($genicMutations)
+    {
+        $genicMutationsGenerated = [];
+
+        foreach ($genicMutations as $key => $row) {
+            $genicMutationsGenerated[] = [
+                'name' => $row->name,
+                'selected' => false,
+                'childs' => $this->generateChild($row->sub_names)
+            ];
+        }
+
+        return $genicMutationsGenerated;
+    }
+
+    protected function generateChild($subNames)
+    {
+        if ($subNames) {
+            $childs = json_decode($subNames, true);
+
+            $childsGenerated = [];
+
+            foreach ($childs as $value) {
+                $childsGenerated[] = [
+                    'name' => $value,
+                    'selected' => false
+                ];
+            }
+
+            return $childsGenerated;
+        } else {
+            return [];
         }
     }
 

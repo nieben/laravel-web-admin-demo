@@ -69,7 +69,7 @@ class UserController extends Controller
             $this->validate($request, [
                 'sex' => 'required|in:F,M',
                 'birthday' => 'required|date_format:Y-m-d',
-                'smoke_history' => 'required|in:0,1',
+                'smoke_history' => 'required|in:1,2,3,4',
                 'diagnosis_time' => 'required|date_format:Y-m-d',
             ]);
         } elseif ($request->input('role') == '1') {   //医生
