@@ -386,7 +386,7 @@ class UserController extends Controller
                     'test_method' => $user->test_method
                 ];
 
-                $data['index_data'] = $this->getUserFunctionIndexData($user->id, 'tumour_function_index');
+                $data['index_data'] = $this->getUserIndexData($user->id);
             } elseif ($user->role == 1) {  //医生
                 $data['user'] = [
                     'avatar' => $user->avatar,
@@ -403,27 +403,68 @@ class UserController extends Controller
         }
     }
 
-    protected function getUserFunctionIndexData($userId, $field)
+    protected function getUserIndexData($useId)
+    {
+        $indexData = [];
+
+        $functions = [
+            'tumour_function_index' => '肿瘤',
+            'liver_function_index' => '肝功能',
+            'renal_function_index' => '肾功能',
+            'heart_function_index' => '心脏功能',
+            'immunity_function_index' => '免疫功能',
+            'routine_blood_index' => '血常规'
+        ];
+
+        //获取所有index信息
+        $indexes = indexDbSourcesWithColumn(DB::table('ft2_indexes')->get(), 'name');
+
+        foreach ($functions as $key => $value) {
+            $indexData[] = [
+                'name' => $value,
+                'selected' => ($key == 'tumour_function_index') ? true : false,  //默认选中肿瘤
+                'data' => $this->getUserFunctionIndexData($useId, $key, $indexes)
+            ];
+        }
+
+        return $indexData;
+    }
+
+    protected function getUserFunctionIndexData($userId, $field, $indexes)
     {
         $userInformation = UserInformation::where('user_id', $userId)->first();
 
         $indexData = json_decode($userInformation->$field, true);
-        
-        //获取所有index信息
-        $indexes = indexDbSourcesWithColumn(DB::table('ft2_indexes')->get(), 'name');
 
         $indexDataGenerated = [];
 
-        foreach ($indexData as $key => $row) {
-            $indexDataGenerated[] = [
-                'name' => $key,
-                'alias' => $indexes[$key]->alias,
-                'important' => $indexes[$key]->important,
-                'data' => $row
-            ];
+        if (! empty($indexData)) {
+            foreach ($indexData as $key => $row) {
+                $indexDataGenerated[] = [
+                    'name' => $key,
+                    'opened' => false,
+                    'alias' => $indexes[$key]->alias,
+                    'important' => $indexes[$key]->important,
+                    'data' => $this->generateIndexData($row)
+                ];
+            }
         }
 
         return $indexDataGenerated;
+    }
+
+    protected function generateIndexData($row)
+    {
+        $dataGenerated = [];
+
+        foreach ($row as $key => $value) {
+            $dataGenerated[] = [
+                'time' => $key,
+                'value' => $value
+            ];
+        }
+
+        return $dataGenerated;
     }
 
     public function updateBasicInformation()
