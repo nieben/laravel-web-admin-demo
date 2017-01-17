@@ -67,11 +67,11 @@ class SmsController extends Controller
             $result = $this->rest->sendTemplateSMS($to,$datas,$this->templateIDS['verification_code']);
 
             if ($result == NULL OR $result->statusCode!=0) {
-                throw new Exception('短信发送失败！');
+                throw new \Exception('短信发送失败！');
             }else {
                 return response()->success([]);
             }
-        }catch (Exception $e) {
+        }catch (\Exception $e) {
             return response()->fail($e->getMessage());
         }
 
