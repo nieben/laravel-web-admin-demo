@@ -89,10 +89,10 @@ if ( ! function_exists('getDifferDate'))
     }
 }
 
-if ( ! function_exists('getDiagnosisDuration'))
+if ( ! function_exists('getUserDiagnosisDuration'))
 {
     //获得确诊时长 例如：2年三个月10天
-    function getDiagnosisDuration($diagnosisTime)
+    function getUserDiagnosisDuration($diagnosisTime)
     {
         $diffDate = getDifferDate($diagnosisTime, time());
 
@@ -111,5 +111,33 @@ if ( ! function_exists('getDiagnosisDuration'))
                 return $hours.'小时';
             }
         }
+    }
+}
+
+if ( ! function_exists('getArticleDuration'))
+{
+    //文章发布时间 小时或天数
+    function getArticleDuration($releaseTime)
+    {
+        $diffTime = time() - $releaseTime;
+
+        if ($diffTime < 24 * 3600) {
+            return intval($diffTime/3600).'小时前';
+        } else {
+            return intval($diffTime/(3600*24)).'天前';
+        }
+    }
+}
+
+if ( ! function_exists('resizeImage'))
+{
+    function resizeImage($imagePath, $weight, $height)
+    {
+        $arr = explode('/', $imagePath);
+        $imgName = end($arr);
+
+        $img = Image::make(env('APP_URL').$imagePath);
+        $img->resize($weight, $height);
+        $img->save('../public/uploads/images/'.$imgName);
     }
 }

@@ -49,6 +49,11 @@ class UserController extends Controller
             3 => '管理员'
         ];
 
+        $data['doctorRoles'] = [
+            1 => '医生(未认证)',
+            2 => '医生(已认证)'
+        ];
+
         $data['active'] = 'user';
 
         return view('admin.user.list', $data);

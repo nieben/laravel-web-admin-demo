@@ -12,6 +12,12 @@ use Illuminate\Support\Facades\DB;
 
 class ArticleController extends Controller
 {
+
+    protected $title_image_size = [
+        'weight' => 114,
+        'height' => 70
+    ];
+
     /**
      * 文章列表页
      */
@@ -89,6 +95,9 @@ class ArticleController extends Controller
             }
 
             $article->save();
+
+            //更改图片尺寸
+            resizeImage($request->input('title_image'), $this->title_image_size['weight'], $this->title_image_size['height']);
 
             return array(
                 'error' => 0,
@@ -174,6 +183,9 @@ class ArticleController extends Controller
             }
 
             $article->save();
+
+            //更改图片尺寸
+            resizeImage($request->input('title_image'), $this->title_image_size['weight'], $this->title_image_size['height']);
 
             return array(
                 'error' => 0,

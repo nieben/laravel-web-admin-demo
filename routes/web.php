@@ -37,6 +37,8 @@ Route::group(['prefix' => 'article'], function () {
     Route::group(['middleware' => 'auth'], function () {
         //加油接口
         Route::get('/cheer/{id}', 'ArticleController@cheer');
+        //取消加油接口
+        Route::get('/uncheer/{id}', 'ArticleController@uncheer');
         //评论接口
         Route::post('/comment', 'ArticleController@addComment');
     });
@@ -58,6 +60,8 @@ Route::group(['prefix' => 'forum'], function () {
     Route::group(['middleware' => 'auth'], function () {
         //加油接口
         Route::get('/post/cheer/{id}', 'ForumController@cheerPost');
+        //取消加油接口
+        Route::get('/post/uncheer/{id}', 'ForumController@uncheerPost');
         //评论接口
         Route::post('/post/comment', 'ForumController@addPostComment');
         //帖子创建

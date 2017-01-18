@@ -242,7 +242,7 @@ class ForumController extends Controller
 
         //几年几个月，如果一个月内则返回多少天
         if ($row->diagnosis_time) {
-            $labels[] = getDiagnosisDuration(strtotime($row->diagnosis_time));
+            $labels[] = getUserDiagnosisDuration(strtotime($row->diagnosis_time));
         }
 
         return $labels;
@@ -477,6 +477,35 @@ class ForumController extends Controller
             }
 
             $post->cheer_number += 1;  //加油数量加1
+            $post->cheered_users = $cheeredUsers;
+            $post->save();
+
+            return response()->success([]);
+        } catch (\Exception $e) {
+            return response()->fail($e->getMessage());
+        }
+    }
+
+    public function uncheerPost($id)
+    {
+        try {
+            $post = Post::where('id', $id)
+                ->where('disabled', 0)
+                ->first();
+
+            if (empty($post)) {
+                throw new \Exception('未找到该帖子！');
+            }
+
+            $user = Auth::user();
+
+            $cheeredUsers = $post->cheered_users;
+
+            if ($cheeredUsers !== null) {
+                $cheeredUsers = str_replace(','.$user->id.',', ',', $cheeredUsers);
+            }
+
+            $post->cheer_number -= 1;  //加油数量减1
             $post->cheered_users = $cheeredUsers;
             $post->save();
 

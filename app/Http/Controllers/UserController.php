@@ -375,7 +375,7 @@ class UserController extends Controller
                     'nickname' => $user->nickname,
                     'sex' => $user->sex,
                     'smoke_history' => $user->smoke_history,
-                    'diagnosis_time' => getDiagnosisDuration(strtotime($user->diagnosis_time))
+                    'diagnosis_time' => getUserDiagnosisDuration(strtotime($user->diagnosis_time))
                 ];
 
                 $data['pathological_info'] = [

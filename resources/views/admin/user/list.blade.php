@@ -81,14 +81,25 @@
                                         <form method="post" class="form-inline" action="{{url('/admin/user/remark')}}">
                                             {{ csrf_field() }}
                                             <div class="form-group" style="width: 30%">
+                                                @if ($row->role == 1 or $row->role == 2)
                                                 <select class="form-control" id="role" name="role">
-                                                    @foreach ($userRoles as $key => $value)
+                                                    @foreach ($doctorRoles as $key => $value)
                                                         <option value="{{$key}}"
                                                                 @if ($key == $row->role)
                                                                 selected
                                                                 @endif>{{$value}}</option>
                                                     @endforeach
                                                 </select>
+                                                @else
+                                                    <select class="form-control" id="role" name="role">
+                                                        @foreach ($userRoles as $key => $value)
+                                                            <option value="{{$key}}"
+                                                                    @if ($key == $row->role)
+                                                                    selected
+                                                                    @endif>{{$value}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                @endif
                                             </div>
                                             &nbsp;&nbsp;备注：
                                             <div class="form-group" style="width: 40%">

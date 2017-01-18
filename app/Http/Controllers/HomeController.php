@@ -95,7 +95,7 @@ class HomeController extends Controller
                 'title' => $row->title,
                 'title_image' => $row->title_image,
                 'labels' => arrayValuesWithIndex($labels, explode(',', $row->labels) ,'name'),
-                'release_time' => $row->release_time
+                'release_time' => getArticleDuration(strtotime($row->release_time))
             ];
         }
 
@@ -148,6 +148,6 @@ class HomeController extends Controller
 
     public function test(Request $request)
     {
-        var_dump($request->all());
+        echo env('APP_URL');
     }
 }

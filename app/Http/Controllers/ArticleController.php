@@ -174,6 +174,36 @@ class ArticleController extends Controller
         }
     }
 
+    public function uncheer($id)
+    {
+        try {
+            $article = Article::where('id', $id)
+                ->where('status', 1)
+                ->where('disabled', 0)
+                ->first();
+
+            if (empty($article)) {
+                throw new \Exception('未找到该文章！');
+            }
+
+            $user = Auth::user();
+
+            $cheeredUsers = $article->cheered_users;
+
+            if ($cheeredUsers !== null) {
+                $cheeredUsers = str_replace(','.$user->id.',', ',', $cheeredUsers);
+            }
+
+            $article->cheer_number -= 1;  //加油数量减1
+            $article->cheered_users = $cheeredUsers;
+            $article->save();
+
+            return response()->success([]);
+        } catch (\Exception $e) {
+            return response()->fail($e->getMessage());
+        }
+    }
+
     public function addComment(Request $request)
     {
         try {
