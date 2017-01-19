@@ -55,8 +55,6 @@ class ForumController extends Controller
 
             $data['sections'] = $this->generateSections($sections);
 
-            $data['current_section'] = Config::get('constants.DEFAULT_DISPLAY_SECTION_ID');
-
             //获取治疗方法标签集
             $treatmentLabels = Label::where('label_category_id', Config::get('constants.TREATMENT_LABEL_CATEGORY_ID'))
                 ->where('disabled', 0)
@@ -81,8 +79,13 @@ class ForumController extends Controller
             ];
 
             $currentSection = DB::table('ft2_forum_sub_sections')
-                ->where('id', $data['current_section'])
+                ->where('id', Config::get('constants.DEFAULT_DISPLAY_SECTION_ID'))
                 ->first();
+
+            $data['current_section'] = [
+                'id' => $currentSection->id,
+                'name' => $currentSection->name
+            ];
 
             if ($currentSection->forum_section_id == Config::get('constants.ALLOW_FILTER_SECTION_ID')) {
                 $data['allow_filter'] = 1;
