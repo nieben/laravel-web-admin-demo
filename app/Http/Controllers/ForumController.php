@@ -64,19 +64,19 @@ class ForumController extends Controller
 
             //筛选参数, 治疗方法
             $data['filters'][] = [
-                'name' => 'treatment_labels',
+                'name' => '治疗方法 (可多选)',
                 'childs' => $this->generateLabels($treatmentLabels),
             ];
 
             //基因
             $data['filters'][] = [
-                'name' => 'genic',
+                'name' => '基因',
                 'childs' => $this->getGenicMutations(),
             ];
 
             //分期
             $data['filters'][] = [
-                'name' => 'stage',
+                'name' => '分期',
                 'childs' => $this->getDiseaseStages(),
             ];
 
@@ -122,9 +122,9 @@ class ForumController extends Controller
 
         foreach ($diseaseStages as $key => $row) {
             $diseaseStagesGenerated[] = [
+                'id' => 0,
                 'name' => $row->name,
-                'selected' => false,
-                'childs' => $this->generateChild($row->sub_names)
+                'selected' => false
             ];
         }
 
@@ -144,9 +144,9 @@ class ForumController extends Controller
 
         foreach ($genicMutations as $key => $row) {
             $genicMutationsGenerated[] = [
+                'id' => 0,
                 'name' => $row->name,
-                'selected' => false,
-                'childs' => $this->generateChild($row->sub_names)
+                'selected' => false
             ];
         }
 
