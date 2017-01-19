@@ -78,16 +78,22 @@ class ForumController extends Controller
                 'childs' => $this->getDiseaseStages(),
             ];
 
-            $currentSection = DB::table('ft2_forum_sub_sections')
+            $currentSubSection = DB::table('ft2_forum_sub_sections')
                 ->where('id', Config::get('constants.DEFAULT_DISPLAY_SECTION_ID'))
+                ->first();
+
+            $currentSection = DB::table('ft2_forum_sections')
+                ->where('id', $currentSubSection->forum_section_id)
                 ->first();
 
             $data['current_section'] = [
                 'id' => $currentSection->id,
-                'name' => $currentSection->name
+                'name' => $currentSection->name,
+                'sub_section_id' => $currentSubSection->id,
+                'sub_section_name' => $currentSubSection->name
             ];
 
-            if ($currentSection->forum_section_id == Config::get('constants.ALLOW_FILTER_SECTION_ID')) {
+            if ($currentSubSection->forum_section_id == Config::get('constants.ALLOW_FILTER_SECTION_ID')) {
                 $data['allow_filter'] = 1;
             } else {
                 $data['allow_filter'] = 0;
