@@ -149,5 +149,11 @@ class HomeController extends Controller
     public function test(Request $request)
     {
         echo env('APP_URL');
+
+        DB::connection()->enableQueryLog();
+
+        $queries = DB::getQueryLog();
+
+        $a = end($queries);
     }
 }

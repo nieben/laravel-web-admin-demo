@@ -62,16 +62,16 @@ class ForumController extends Controller
                 ->where('disabled', 0)
                 ->get();
 
-            //筛选参数, 治疗方法
-            $data['filters'][] = [
-                'name' => '治疗方法 (可多选)',
-                'childs' => $this->generateLabels($treatmentLabels),
-            ];
-
             //基因
             $data['filters'][] = [
                 'name' => '基因',
                 'childs' => $this->getGenicMutations(),
+            ];
+
+            //筛选参数, 治疗方法
+            $data['filters'][] = [
+                'name' => '治疗方法 (可多选)',
+                'childs' => $this->generateLabels($treatmentLabels),
             ];
 
             //分期
@@ -277,11 +277,41 @@ class ForumController extends Controller
                 ->where('ft2_posts.forum_sub_section_id', '=', $sub_section_id);
 
             if ($genic_mutation) {
-                $db->where('ft2_users.genic_mutation', $genic_mutation);
+                //如果有子选项，则同时筛选
+                $genicMutation = DB::table('ft2_genic_mutations')->where('name', $genic_mutation)->first();
+                if ($genicMutation->sub_names != null) {
+                    $subNames = json_decode($genicMutation->sub_names, true);
+
+                    $db->where(function ($query) use ($genic_mutation, $subNames) {
+                        $query->where('ft2_users.genic_mutation', $genic_mutation);
+
+                        foreach ($subNames as $key => $value) {
+                            $query->orWhere('ft2_users.genic_mutation', $value);
+                        }
+                    });
+
+                } else {
+                    $db->where('ft2_users.genic_mutation', $genic_mutation);
+                }
             }
 
             if ($disease_stage) {
-                $db->where('ft2_users.disease_stage', $disease_stage);
+                //如果有子选项，则同时筛选
+                $diseaseStage = DB::table('ft2_disease_stages')->where('name', $disease_stage)->first();
+                if ($diseaseStage->sub_names != null) {
+                    $subNames = json_decode($diseaseStage->sub_names, true);
+
+                    $db->where(function ($query) use ($disease_stage, $subNames) {
+                        $query->where('ft2_users.disease_stage', $disease_stage);
+
+                        foreach ($subNames as $key => $value) {
+                            $query->orWhere('ft2_users.disease_stage', $value);
+                        }
+                    });
+
+                } else {
+                    $db->where('ft2_users.disease_stage', $disease_stage);
+                }
             }
 
             //治疗方法标签
@@ -305,6 +335,7 @@ class ForumController extends Controller
                 $db->orderBy('ft2_posts.comment_number', 'desc');
             }
 
+            
             $posts = $db->select('ft2_posts.*', 'ft2_users.avatar', 'ft2_users.nickname',
                     'ft2_users.pathologic_type', 'ft2_users.genic_mutation', 'ft2_users.diagnosis_time')
                 ->paginate($size);
