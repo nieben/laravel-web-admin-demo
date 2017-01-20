@@ -71,7 +71,7 @@ class ArticleController extends Controller
             $data['article'] = [
                 'title' => $article->title,
                 'labels' => arrayValuesWithIndex($labels, explode(',', $article->labels) ,'name'),
-                'release_time' => $article->release_time,
+                'release_time' => date('Y-m-d', strtotime($article->release_time)),  //Y-m-d格式，只精确到天
                 'content' => $article->content,
                 'cheer_number' => $article->cheer_number,
                 'allow_comment' => $article->allow_comment

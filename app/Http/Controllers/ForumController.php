@@ -230,7 +230,7 @@ class ForumController extends Controller
                 'user_labels' => $this->getUserLabels($row),
                 'title' => $row->title,
                 'labels' => arrayValuesWithIndex($labels, explode(',', $row->labels) ,'name'),
-                'create_time' => (string)$row->created_at
+                'create_time' => date('Y-m-d', strtotime($row->created_at))
             ];
         }
 
