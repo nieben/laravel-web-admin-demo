@@ -359,7 +359,13 @@ class UserController extends Controller
     {
         View::addExtension('html', 'php');
 
-        return view('test');
+        $user = Auth::user();
+
+        if ($user->role == 0 or $user->role == 3) {  //病人页面
+            return view('dist.userpage');
+        } else {
+            return view('dist.doctorpage');
+        }
     }
 
     public function getHomePageData()
@@ -473,7 +479,13 @@ class UserController extends Controller
     {
         View::addExtension('html', 'php');
 
-        return view('test');
+        $user = Auth::user();
+
+        if ($user->role == 0 or $user->role == 3) {  //病人页面
+            return view('dist.edit-baseinfo');
+        } else {
+            return view('dist.edit-doctorinfo');
+        }
     }
 
     public function updateBasicInformationSubmit(Request $request)
@@ -533,7 +545,7 @@ class UserController extends Controller
     {
         View::addExtension('html', 'php');
 
-        return view('dist.pathologyinfo');
+        return view('dist.edit-pathologyinfo');
     }
 
     public function updatePathologicalInformationSubmit(Request $request)
@@ -557,11 +569,25 @@ class UserController extends Controller
         }
     }
 
-    public function addIndexData()
+    public function addIndexDataFunctionChoose()
     {
         View::addExtension('html', 'php');
 
-        return view('test');
+        return view('dist.new-choices');
+    }
+
+    public function addIndexDataImportant()
+    {
+        View::addExtension('html', 'php');
+
+        return view('dist.new-index');
+    }
+
+    public function addIndexDataSecondary()
+    {
+        View::addExtension('html', 'php');
+
+        return view('dist.new-sub-index');
     }
 
     public function addIndexDataSubmit(Request $request)

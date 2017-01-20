@@ -127,8 +127,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/immunity_function_index/first_add', 'UserController@firstAddImmunityIndexInformation');
         Route::post('/immunity_function_index/first_add', 'UserController@firstAddImmunityIndexInformationSubmit');
 
-        //新增报告单
-        Route::get('/index_information/add', 'UserController@addIndexData');
+        //新增报告单指标选择页面
+        Route::get('/index_information/add/function_choose', 'UserController@addIndexDataFunctionChoose');
+        //新增报告单重要指标
+        Route::get('/index_information/add/important', 'UserController@addIndexDataImportant');
+        //新增报告单次重要指标
+        Route::get('/index_information/add/secondary', 'UserController@addIndexDataSecondary');
         Route::post('/index_information/add', 'UserController@addIndexDataSubmit');
 
         //指标信息修改
