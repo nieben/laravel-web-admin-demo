@@ -641,7 +641,7 @@ class UserController extends Controller
     {
         View::addExtension('html', 'php');
 
-        return view('test');
+        return view('dist.edit-index');
     }
 
     public function updateIndexDataSubmit(Request $request)
