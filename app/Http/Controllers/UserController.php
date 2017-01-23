@@ -147,7 +147,7 @@ class UserController extends Controller
 
             //标注用户注册信息填写完成
             $user->information_filled = 1;
-            
+
             $user->save();
 
             return response()->success([
@@ -458,7 +458,7 @@ class UserController extends Controller
 
     protected function getUserFunctionIndexData($userId, $field, $indexes)
     {
-        $userInformation = UserInformation::where('user_id', $userId)->first();
+        $userInformation = $this->getUserInformation($userId);
 
         $indexData = json_decode($userInformation->$field, true);
 
