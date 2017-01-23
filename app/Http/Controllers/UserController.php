@@ -182,10 +182,6 @@ class UserController extends Controller
 
             $defaultDate = $this->addIndexInformation('tumour_function_index', $request->input('data'), $user->id);
 
-            //标注用户注册信息填写完成
-            $user->information_filled = 1;
-            $user->save();
-
             return response()->success([
                 'default_date' => $defaultDate,
                 'redirect' => '/user/liver_function_index/first_add',
@@ -361,10 +357,28 @@ class UserController extends Controller
 
         $user = Auth::user();
 
+        //检查用户信息是否填写，没有则跳转到信息填写页
+        if ($user->information_filled == 0) {
+            if ($this->isDoctor($user)) {
+                return url('/basic_information/doctor');
+            } else {
+                return url('/basic_information/user');
+            }
+        }
+
         if ($user->role == 0 or $user->role == 3) {  //病人页面
             return view('dist.userpage');
         } else {
             return view('dist.doctorpage');
+        }
+    }
+
+    protected function isDoctor($user)
+    {
+        if ($user->role == 1 or $user->role == 2) {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -561,6 +575,10 @@ class UserController extends Controller
             $user->metastatic_lesion = json_encode($request->input('metastatic_lesion'));
             $user->genic_mutation = $request->input('genic_mutation');
             $user->test_method = $request->input('test_method');
+
+            //标注用户注册信息填写完成
+            $user->information_filled = 1;
+
             $user->save();
 
             return response()->success([]);
