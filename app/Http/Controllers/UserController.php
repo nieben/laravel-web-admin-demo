@@ -119,10 +119,20 @@ class UserController extends Controller
 
     protected function validateSupplementInformation(Request $request)
     {
-        $this->validate($request, [
+        $messages = [
+            'nickname.unique' => '昵称已存在！',
+            'nickname.regex' => '昵称只支持中文，英文，数字和下划线！',
+            'password.min' => '密码最少六位！'
+        ];
+
+        $validator = Validator::make($request->all(), [
             'nickname' => 'required|max:255|unique:ft2_users,nickname|regex:/^[\x{4e00}-\x{9fa5}A-Za-z0-9_]+$/u',
             'password' => 'required|min:6',
-        ]);
+        ], $messages);
+
+        if ($validator->fails()) {
+            throw new \Exception($validator->errors()->first());
+        }
     }
 
     public function pathologicalInformation()
@@ -529,7 +539,7 @@ class UserController extends Controller
                 $user->department = $request->input('department');
                 $user->save();
 
-                return response()->success([]);
+                return response()->success([], '保存成功！');
             }
         } catch (\Exception $e) {
             return response()->fail($e->getMessage());
@@ -582,7 +592,7 @@ class UserController extends Controller
 
             $user->save();
 
-            return response()->success([]);
+            return response()->success([], '保存成功！');
         } catch (\Exception $e) {
             return response()->fail($e->getMessage());
         }
@@ -642,7 +652,7 @@ class UserController extends Controller
 
             return response()->success([
                 'default_date' => $defaultDate
-            ]);
+            ], '添加成功！');
         } catch (\Exception $e) {
             return response()->fail($e->getMessage());
         }
@@ -694,7 +704,7 @@ class UserController extends Controller
 
             $this->updateIndexInformation($field, $request->index, $request->data, $user->id);
 
-            return response()->success([]);
+            return response()->success([], '保存成功！');
         } catch (\Exception $e) {
             return response()->fail($e->getMessage());
         }

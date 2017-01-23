@@ -14,10 +14,10 @@ class ResponseServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Response::macro('success', function ($data) {
+        Response::macro('success', function ($data, $message = 'success') {
             return Response::make([
                 'code' => 0,
-                'message' => 'success',
+                'message' => $message,
                 'data' => $data
             ]);
         });

@@ -84,7 +84,6 @@ class RegisterController extends Controller
     }
 
     protected function checkVerificationCode($mobile, $verificationCode) {
-//        return TRUE;
         $rVerificationCode = Redis::get('ft2_verification_code:'.$mobile);
 
         return ($verificationCode == $rVerificationCode);
@@ -92,12 +91,22 @@ class RegisterController extends Controller
 
     protected function validateRegister(Request $request)
     {
-        $this->validate($request, [
+        $messages = [
+            'nickname.unique' => '昵称已存在！',
+            'nickname.regex' => '昵称只支持中文，英文，数字和下划线！',
+            'password.min' => '密码最少六位！'
+        ];
+
+        $validator = Validator::make($request->all(), [
             'nickname' => 'required|max:255|unique:ft2_users,nickname|regex:/^[\x{4e00}-\x{9fa5}A-Za-z0-9_]+$/u',
             'mobile' => 'required|unique:ft2_users,mobile',
             'verification_code' => 'required',
             'password' => 'required|min:6',
-        ]);
+        ], $messages);
+
+        if ($validator->fails()) {
+            throw new \Exception($validator->errors()->first());
+        }
     }
 
     /**

@@ -168,7 +168,7 @@ class ArticleController extends Controller
             $article->cheered_users = $cheeredUsers;
             $article->save();
 
-            return response()->success([]);
+            return response()->success([], '成功！');
         } catch (\Exception $e) {
             return response()->fail($e->getMessage());
         }
@@ -198,7 +198,7 @@ class ArticleController extends Controller
             $article->cheered_users = $cheeredUsers;
             $article->save();
 
-            return response()->success([]);
+            return response()->success([], '取消成功！');
         } catch (\Exception $e) {
             return response()->fail($e->getMessage());
         }
@@ -267,7 +267,7 @@ class ArticleController extends Controller
             $article->last_response = Date('Y-m-d H:i:s');
             $article->save();
 
-            return response()->success($data);
+            return response()->success($data, '评论成功！');
         } catch (\Exception $e) {
             return response()->fail($e->getMessage());
         }

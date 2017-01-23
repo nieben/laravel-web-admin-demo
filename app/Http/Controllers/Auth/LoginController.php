@@ -83,7 +83,11 @@ class LoginController extends Controller
         // user surpasses their maximum number of attempts they will get locked out.
         $this->incrementLoginAttempts($request);
 
-        $message = '登录失败！';
+        if ($this->isUser($request->input('mobile'))) {
+            $message = '密码错误！';
+        } else {
+            $message = '该手机号尚未注册！';
+        }
 
         return $this->sendFailedLoginResponse($message);
     }
@@ -124,7 +128,7 @@ class LoginController extends Controller
                         'redirect' => '/user/supplementary_information'
                     ]);
                 } else {
-                    $message = '该手机号未注册！';
+                    $message = '该手机号尚未注册！';
                     return $this->sendFailedLoginResponse($message);
                 }
             }
@@ -155,7 +159,6 @@ class LoginController extends Controller
     }
 
     protected function checkVerificationCode($mobile, $verificationCode) {
-//        return TRUE;
         $rVerificationCode = Redis::get('ft2_verification_code:'.$mobile);
 
         return ($verificationCode == $rVerificationCode);

@@ -524,7 +524,7 @@ class ForumController extends Controller
             $post->cheered_users = $cheeredUsers;
             $post->save();
 
-            return response()->success([]);
+            return response()->success([], '成功！');
         } catch (\Exception $e) {
             return response()->fail($e->getMessage());
         }
@@ -553,7 +553,7 @@ class ForumController extends Controller
             $post->cheered_users = $cheeredUsers;
             $post->save();
 
-            return response()->success([]);
+            return response()->success([], '取消成功！');
         } catch (\Exception $e) {
             return response()->fail($e->getMessage());
         }
@@ -622,7 +622,7 @@ class ForumController extends Controller
             $post->last_response = Date('Y-m-d H:i:s');
             $post->save();
 
-            return response()->success($data);
+            return response()->success($data, '评论成功！');
         } catch (\Exception $e) {
             return response()->fail($e->getMessage());
         }
@@ -672,7 +672,7 @@ class ForumController extends Controller
 
             $post->save();
 
-            return response()->success([]);
+            return response()->success([], '创建成功！');
         } catch (\Exception $e) {
             return response()->fail($e->getMessage());
         }

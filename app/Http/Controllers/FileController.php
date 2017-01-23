@@ -15,7 +15,7 @@ class FileController extends Controller
 
             return response()->success([
                 'url' => asset('uploads/'.$path)
-            ]);
+            ], '上传成功！');
         } catch (\Exception $e) {
             return response()->fail($e->getMessage());
         }
