@@ -360,9 +360,9 @@ class UserController extends Controller
         //检查用户信息是否填写，没有则跳转到信息填写页
         if ($user->information_filled == 0) {
             if ($this->isDoctor($user)) {
-                return redirect('/basic_information/doctor');
+                return redirect('/user/basic_information/doctor');
             } else {
-                return redirect('/basic_information/user');
+                return redirect('/user/basic_information/user');
             }
         }
 
