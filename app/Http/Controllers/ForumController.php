@@ -396,6 +396,10 @@ class ForumController extends Controller
             if ($user = Auth::user()) {
                 $data['has_login'] = 1;
 
+                $data['nickname'] = $user->nickname;
+
+                $data['avatar'] = $user->avatar;
+
                 //注册时间大于CAN_COMMENT_AFTER_REGISTRATION值时，可以评论
                 $userCreateAt = $user->created_at;
 
