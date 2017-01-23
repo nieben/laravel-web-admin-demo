@@ -98,7 +98,7 @@ if ( ! function_exists('getUserDiagnosisDuration'))
 
         $diagnosisTime = '';
         $diagnosisTime .= $diffDate['year'] > 0 ? $diffDate['year'].'年' : '';
-        $diagnosisTime .= $diffDate['month'] > 0 ? $diffDate['year'].'个月' : '';
+        $diagnosisTime .= $diffDate['month'] > 0 ? $diffDate['month'].'个月' : '';
 
         if ($diagnosisTime) {
             return $diagnosisTime;
