@@ -144,6 +144,10 @@ class UserController extends Controller
             $user->metastatic_lesion = json_encode($request->input('metastatic_lesion'));
             $user->genic_mutation = $request->input('genic_mutation');
             $user->test_method = $request->input('test_method');
+
+            //标注用户注册信息填写完成
+            $user->information_filled = 1;
+            
             $user->save();
 
             return response()->success([
@@ -575,9 +579,6 @@ class UserController extends Controller
             $user->metastatic_lesion = json_encode($request->input('metastatic_lesion'));
             $user->genic_mutation = $request->input('genic_mutation');
             $user->test_method = $request->input('test_method');
-
-            //标注用户注册信息填写完成
-            $user->information_filled = 1;
 
             $user->save();
 
